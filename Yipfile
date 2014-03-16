@@ -1,4 +1,6 @@
 
+osx:framework Cocoa
+
 sources:osx
 {
 	osx/main.mm

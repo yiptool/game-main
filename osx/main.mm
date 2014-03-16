@@ -20,8 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+#import <Cocoa/Cocoa.h>
 
-int main()
+static void initMainMenu(NSApplication * application)
 {
+	NSString * programName = [[[NSProcessInfo processInfo] processName] capitalizedString];
+	NSString * quitTitle = [@"Quit " stringByAppendingString:programName];
+
+	NSMenuItem * quitMenuItem = [[NSMenuItem alloc] autorelease];
+	[quitMenuItem initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+
+	NSMenu * appMenu = [[NSMenu new] autorelease];
+	[appMenu addItem:quitMenuItem];
+
+	NSMenuItem * appMenuItem = [[NSMenuItem new] autorelease];
+	[appMenuItem setSubmenu:appMenu];
+
+	NSMenu * mainMenu = [[NSMenu new] autorelease];
+	[mainMenu addItem:appMenuItem];
+
+	[application setMainMenu:mainMenu];
+}
+
+int main(int argc, char ** argv)
+{
+	@autoreleasepool
+	{
+		NSApplication * application = [NSApplication sharedApplication];
+
+		initMainMenu(application);
+
+		[application setActivationPolicy:NSApplicationActivationPolicyRegular];
+		[application activateIgnoringOtherApps:YES];
+		[application run];
+	}
+
 	return 0;
 }
