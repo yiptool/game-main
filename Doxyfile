@@ -92,7 +92,9 @@ INPUT                  =
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
-EXCLUDE                = 
+EXCLUDE                = osx/application.h \
+                         osx/gl_window.h \
+                         osx/util.h
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
