@@ -29,6 +29,14 @@
 
 namespace Game
 {
+	/** Mouse button. */
+	enum MouseButton
+	{
+		LeftButton = 0,
+		RightButton,
+		MiddleButton
+	};
+
 	/**
 	 * Base class for games created using this framework.
 	 *
@@ -61,6 +69,22 @@ namespace Game
 		static Main * instance() noexcept;
 
 		/**
+		 * Returns width of the viewport.
+		 * @return Width of the viewport.
+		 */
+		inline int viewportWidth() const noexcept { return m_ViewportWidth; }
+
+		/**
+		 * Returns height of the viewport.
+		 * @return Height of the viewport.
+		 */
+		inline int viewportHeight() const noexcept { return m_ViewportHeight; }
+
+		/** @cond */
+		inline void setViewportSize_(int w, int h) { m_ViewportWidth = w; m_ViewportHeight = h; }
+		/** @endcond */
+
+		/**
 		 * Initializes the game.
 		 * This method is called once by the framework to initialize the game.
 		 * This method should be overriden in child classes.
@@ -89,20 +113,27 @@ namespace Game
 		virtual void configureOpenGL(OpenGLInitOptions & options);
 
 		/**
-		 * Returns width of the viewport.
-		 * @return Width of the viewport.
+		 * Called when user presses mouse button over the viewport.
+		 * @param x X coordinate where user has pressed the button.
+		 * @param y Y coordinate where user has pressed the button.
+		 * @param button Button that has been pressed.
 		 */
-		inline int viewportWidth() const noexcept { return m_ViewportWidth; }
+		virtual void onMouseButtonDown(int x, int y, MouseButton button);
 
 		/**
-		 * Returns height of the viewport.
-		 * @return Height of the viewport.
+		 * Called when user releases mouse button over the viewport.
+		 * @param x X coordinate where user has released the button.
+		 * @param y Y coordinate where user has released the button.
+		 * @param button Button that has been released.
 		 */
-		inline int viewportHeight() const noexcept { return m_ViewportHeight; }
+		virtual void onMouseButtonUp(int x, int y, MouseButton button);
 
-		/** @cond */
-		inline void setViewportSize_(int w, int h) { m_ViewportWidth = w; m_ViewportHeight = h; }
-		/** @endcond */
+		/**
+		 * Called when user moves the mouse over the viewport.
+		 * @param x X coordinate of mouse.
+		 * @param y Y coordinate of mouse.
+		 */
+		virtual void onMouseMove(int x, int y);
 
 	private:
 		int m_ViewportWidth;

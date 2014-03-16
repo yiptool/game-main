@@ -44,3 +44,23 @@ void Game::Main::configureOpenGL(OpenGLInitOptions & options)
 {
 	(void)options;
 }
+
+void Game::Main::onMouseButtonDown(int x, int y, MouseButton button)
+{
+	(void)x;
+	(void)y;
+	(void)button;
+}
+
+void Game::Main::onMouseButtonUp(int x, int y, MouseButton button)
+{
+	(void)x;
+	(void)y;
+	(void)button;
+}
+
+void Game::Main::onMouseMove(int x, int y)
+{
+	(void)x;
+	(void)y;
+}

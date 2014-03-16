@@ -84,6 +84,14 @@
 		name:NSViewGlobalFrameDidChangeNotification object:self];
 }
 
+-(void)transformEventLocation:(NSEvent *)event andInvoke:(void (^)(int, int))handler
+{
+	NSPoint pos = [event locationInWindow];
+	pos = [self convertPoint:pos fromView:nil];
+	pos.y = self.frame.size.height - pos.y;
+	handler((int)pos.x, (int)pos.y);
+}
+
 -(void)update
 {
 	[context update];
@@ -140,6 +148,7 @@
 	self.delegate = self;
 	self.restorable = NO;
 	self.opaque = YES;
+	self.acceptsMouseMovedEvents = YES;
 	self.backgroundColor = NSColor.blackColor;
 	if (opt.fullscreen)
 	{
@@ -208,6 +217,84 @@
 		return;
 	[view display];
 	[self performSelectorOnMainThread:@selector(runFrame) withObject:nil waitUntilDone:NO];
+}
+
+// Mouse movement
+
+-(void)mouseDragged:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseMove(x, y);
+	}];
+}
+
+-(void)rightMouseDragged:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseMove(x, y);
+	}];
+}
+
+-(void)otherMouseDragged:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseMove(x, y);
+	}];
+}
+
+-(void)mouseMoved:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseMove(x, y);
+	}];
+}
+
+// Mouse buttons
+
+-(void)mouseDown:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseButtonDown(x, y, Game::LeftButton);
+	}];
+}
+
+-(void)mouseUp:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseButtonUp(x, y, Game::LeftButton);
+	}];
+}
+
+-(void)rightMouseDown:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseButtonDown(x, y, Game::RightButton);
+	}];
+}
+
+-(void)rightMouseUp:(NSEvent *)event
+{
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseButtonUp(x, y, Game::RightButton);
+	}];
+}
+
+-(void)otherMouseDown:(NSEvent *)event
+{
+	if (event.buttonNumber != 2)
+		return;
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseButtonDown(x, y, Game::MiddleButton);
+	}];
+}
+
+-(void)otherMouseUp:(NSEvent *)event
+{
+	if (event.buttonNumber != 2)
+		return;
+	[view transformEventLocation:event andInvoke:^(int x, int y) {
+		Game::Main::instance()->onMouseButtonUp(x, y, Game::MiddleButton);
+	}];
 }
 
 @end
