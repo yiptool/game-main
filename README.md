@@ -16,6 +16,24 @@ to be included into projects using the [Yip](https://github.com/zapolnov/yip.git
 Use the `import game-main` directive in your `Yipfile` to use this library.
 
 
+Creating a game
+---------------
+
+When creating a new game, you have to subclass from the Game::Main class and
+override callback methods. Then you have to use the special macro
+`GAME_MAIN_CLASS` in the C++ source (**not header**!) file:
+
+      class MyGame : public Game::Main
+      {
+          void init() {}
+          void runFrame() {}
+      };
+      
+      GAME_MAIN_CLASS(MyGame)
+
+**Note:** your game code should **not** contain the `main` function - it is
+provided by the *game-main* framework.
+
 License
 =======
 

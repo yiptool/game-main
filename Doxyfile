@@ -92,10 +92,7 @@ INPUT                  =
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
-EXCLUDE                = normal/glew/include/GL/glew.h \
-                         normal/glew/include/GL/glxew.h \
-                         normal/glew/include/GL/wglew.h \
-                         normal/glew/src/glew.c.h
+EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =

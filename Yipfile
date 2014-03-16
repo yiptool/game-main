@@ -1,7 +1,16 @@
 
+import cxx-util
+
 osx:framework Cocoa
+osx:framework OpenGL
+
+public_headers
+{
+	game_main.h
+}
 
 sources:osx
 {
 	osx/main.mm
+	game_main.cpp
 }
