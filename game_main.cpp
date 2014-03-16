@@ -64,3 +64,18 @@ void Game::Main::onMouseMove(int x, int y)
 	(void)x;
 	(void)y;
 }
+
+void Game::Main::onKeyPress(Sys::KeyCode key)
+{
+	(void)key;
+}
+
+void Game::Main::onKeyRelease(Sys::KeyCode key)
+{
+	(void)key;
+}
+
+void Game::Main::onCharInput(uint16_t ch)
+{
+	(void)ch;
+}

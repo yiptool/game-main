@@ -29,6 +29,7 @@
 {
 	GLView * view;
 	BOOL initialized;
+	uint32_t modifierFlags;
 }
 -(id)init;
 -(void)dealloc;

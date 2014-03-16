@@ -7,8 +7,9 @@ osx:framework OpenGL
 
 public_headers
 {
-	opengl_init_options.h
 	game_main.h
+	key_code.h
+	opengl_init_options.h
 }
 
 sources:osx
@@ -21,4 +22,5 @@ sources:osx
 	osx/util.h
 	osx/util.mm
 	game_main.cpp
+	key_code.cpp
 }

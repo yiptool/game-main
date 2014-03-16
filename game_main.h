@@ -24,7 +24,9 @@
 #define __9c737b5fd1ba40f53025d5221a5f0032__
 
 #include <yip-imports/cxx-util/macros.h>
+#include "key_code.h"
 #include "opengl_init_options.h"
+#include <cstdint>
 #include <cassert>
 
 namespace Game
@@ -134,6 +136,24 @@ namespace Game
 		 * @param y Y coordinate of mouse.
 		 */
 		virtual void onMouseMove(int x, int y);
+
+		/**
+		 * Called when user presses key on the keyboard.
+		 * @param key Key code.
+		 */
+		virtual void onKeyPress(Sys::KeyCode key);
+
+		/**
+		 * Called when user releases key on the keyboard.
+		 * @param key Key code.
+		 */
+		virtual void onKeyRelease(Sys::KeyCode key);
+
+		/**
+		 * Called when user enters text on the keyboard.
+		 * @param ch UTF-16 character code.
+		 */
+		virtual void onCharInput(uint16_t ch);
 
 	private:
 		int m_ViewportWidth;

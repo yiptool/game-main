@@ -24,6 +24,7 @@
 #import "application.h"
 #import "util.h"
 #import "../game_main.h"
+#import "../key_code.h"
 #import <algorithm>
 
 #define FULLSCREEN_STYLE_MASK (NSBorderlessWindowMask)
@@ -295,6 +296,185 @@
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
 		Game::Main::instance()->onMouseButtonUp(x, y, Game::MiddleButton);
 	}];
+}
+
+// Keyboard input
+
+static const unsigned char g_KeyCodeMapping[128] =
+{
+	Sys::Key_A,
+	Sys::Key_S,
+	Sys::Key_D,
+	Sys::Key_F,
+	Sys::Key_H,
+	Sys::Key_G,
+	Sys::Key_Z,
+	Sys::Key_X,
+	Sys::Key_C,
+	Sys::Key_V,
+	Sys::Key_Unknown,
+	Sys::Key_B,
+	Sys::Key_Q,
+	Sys::Key_W,
+	Sys::Key_E,
+	Sys::Key_R,
+	Sys::Key_Y,
+	Sys::Key_T,
+	Sys::Key_1,
+	Sys::Key_2,
+	Sys::Key_3,
+	Sys::Key_4,
+	Sys::Key_6,
+	Sys::Key_5,
+	Sys::Key_Equal,
+	Sys::Key_9,
+	Sys::Key_7,
+	Sys::Key_Minus,
+	Sys::Key_8,
+	Sys::Key_0,
+	Sys::Key_RightBracket,
+	Sys::Key_O,
+	Sys::Key_U,
+	Sys::Key_LeftBracket,
+	Sys::Key_I,
+	Sys::Key_P,
+	Sys::Key_Enter,
+	Sys::Key_L,
+	Sys::Key_J,
+	Sys::Key_Apostrophe,
+	Sys::Key_K,
+	Sys::Key_Semicolon,
+	Sys::Key_Backslash,
+	Sys::Key_Comma,
+	Sys::Key_Slash,
+	Sys::Key_N,
+	Sys::Key_M,
+	Sys::Key_Period,
+	Sys::Key_Tab,
+	Sys::Key_Space,
+	Sys::Key_GraveAccent,
+	Sys::Key_Backspace,
+	Sys::Key_Unknown,
+	Sys::Key_Escape,
+	Sys::Key_Unknown,			/* Right Command */
+	Sys::Key_Unknown,			/* Left Command */
+	Sys::Key_LeftShift,
+	Sys::Key_CapsLock,
+	Sys::Key_LeftAlt,
+	Sys::Key_LeftControl,
+	Sys::Key_RightShift,
+	Sys::Key_RightAlt,
+	Sys::Key_RightControl,
+	Sys::Key_Unknown,			/* Function */
+	Sys::Key_F17,
+	Sys::Key_Numeric_Decimal,
+	Sys::Key_Unknown,
+	Sys::Key_Numeric_Multiply,
+	Sys::Key_Unknown,
+	Sys::Key_Numeric_Plus,
+	Sys::Key_Unknown,
+	Sys::Key_NumLock,
+	Sys::Key_Unknown,			/* Volume up */
+	Sys::Key_Unknown,			/* Volume down */
+	Sys::Key_Unknown,			/* Mute */
+	Sys::Key_Numeric_Divide,
+	Sys::Key_Numeric_Enter,
+	Sys::Key_Unknown,
+	Sys::Key_Numeric_Minus,
+	Sys::Key_F18,
+	Sys::Key_F19,
+	Sys::Key_Numeric_Equal,
+	Sys::Key_Numeric_0,
+	Sys::Key_Numeric_1,
+	Sys::Key_Numeric_2,
+	Sys::Key_Numeric_3,
+	Sys::Key_Numeric_4,
+	Sys::Key_Numeric_5,
+	Sys::Key_Numeric_6,
+	Sys::Key_Numeric_7,
+	Sys::Key_F20,
+	Sys::Key_Numeric_8,
+	Sys::Key_Numeric_9,
+	Sys::Key_Unknown,
+	Sys::Key_Unknown,
+	Sys::Key_Unknown,
+	Sys::Key_F5,
+	Sys::Key_F6,
+	Sys::Key_F7,
+	Sys::Key_F3,
+	Sys::Key_F8,
+	Sys::Key_F9,
+	Sys::Key_Unknown,
+	Sys::Key_F11,
+	Sys::Key_Unknown,
+	Sys::Key_F13,
+	Sys::Key_F16,
+	Sys::Key_F14,
+	Sys::Key_Unknown,
+	Sys::Key_F10,
+	Sys::Key_Unknown,
+	Sys::Key_F12,
+	Sys::Key_Unknown,
+	Sys::Key_F15,
+	Sys::Key_Unknown,
+	Sys::Key_Home,
+	Sys::Key_PageUp,
+	Sys::Key_Delete,
+	Sys::Key_F4,
+	Sys::Key_End,
+	Sys::Key_F2,
+	Sys::Key_PageDown,
+	Sys::Key_F1,
+	Sys::Key_Left,
+	Sys::Key_Right,
+	Sys::Key_Down,
+	Sys::Key_Up,
+	Sys::Key_Unknown,
+};
+
+static Sys::KeyCode mapKeyFromOSX(unsigned short key)
+{
+	if (key < sizeof(g_KeyCodeMapping) / sizeof(g_KeyCodeMapping[0]))
+		return static_cast<Sys::KeyCode>(g_KeyCodeMapping[key]);
+	return Sys::Key_Unknown;
+}
+
+-(BOOL)acceptsFirstResponder
+{
+	return YES;
+}
+
+-(void)keyDown:(NSEvent *)event
+{
+	Game::Main::instance()->onKeyPress(mapKeyFromOSX(event.keyCode));
+
+	NSString * text = event.characters;
+	NSUInteger length = text.length;
+	for (NSUInteger i = 0; i < length; i++)
+	{
+		uint32_t ch = [text characterAtIndex:i];
+		if (ch >= 0xD800 && ch < 0xF900)				// Ignore surrogate pairs and private use area
+			continue;
+		Game::Main::instance()->onCharInput(ch);
+	}
+}
+
+-(void)keyUp:(NSEvent *)event
+{
+	Game::Main::instance()->onKeyRelease(mapKeyFromOSX(event.keyCode));
+}
+
+-(void)flagsChanged:(NSEvent *)event
+{
+	uint32_t flags = event.modifierFlags & NSDeviceIndependentModifierFlagsMask;
+	bool isPress = flags > modifierFlags;
+	modifierFlags = flags;
+
+	Sys::KeyCode keyCode = mapKeyFromOSX(event.keyCode);
+	if (isPress)
+		Game::Main::instance()->onKeyPress(keyCode);
+	else
+		Game::Main::instance()->onKeyRelease(keyCode);
 }
 
 @end
