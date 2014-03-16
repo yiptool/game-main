@@ -20,27 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#include "game_main.h"
-#include <cassert>
 
-extern "C" void * c9737b5fd();
+#import <Cocoa/Cocoa.h>
 
-Game::Main::Main() noexcept
-	: m_ViewportWidth(0),
-	  m_ViewportHeight(0)
-{
-}
+@class GLWindow;
 
-Game::Main::~Main() noexcept
-{
-}
-
-Game::Main * Game::Main::instance() noexcept
-{
-	return reinterpret_cast<Game::Main *>(c9737b5fd());
-}
-
-void Game::Main::configureOpenGL(OpenGLInitOptions & options)
-{
-	(void)options;
-}
+@interface Application : NSApplication<NSApplicationDelegate>
+@property (nonatomic, retain) GLWindow * glWindow;
+-(id)init;
+@end

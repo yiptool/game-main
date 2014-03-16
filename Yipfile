@@ -2,15 +2,23 @@
 import cxx-util
 
 osx:framework Cocoa
+osx:framework QuartzCore
 osx:framework OpenGL
 
 public_headers
 {
+	opengl_init_options.h
 	game_main.h
 }
 
 sources:osx
 {
+	osx/application.h
+	osx/application.mm
+	osx/gl_window.h
+	osx/gl_window.mm
 	osx/main.mm
+	osx/util.h
+	osx/util.mm
 	game_main.cpp
 }

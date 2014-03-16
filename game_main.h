@@ -24,6 +24,7 @@
 #define __9c737b5fd1ba40f53025d5221a5f0032__
 
 #include <yip-imports/cxx-util/macros.h>
+#include "opengl_init_options.h"
 #include <cassert>
 
 namespace Game
@@ -67,13 +68,46 @@ namespace Game
 		virtual void init() = 0;
 
 		/**
+		 * Releases resources acquired by the game.
+		 * This method is called once by the framework to deinitialize the game.
+		 * This method should be overriden in child classes.
+		 */
+		virtual void cleanup() = 0;
+
+		/**
 		 * Runs one game frame.
 		 * This method is called by the framework each frame to update the game, render it's contents, etc.
 		 * This method should be overriden in child classes.
 		 */
 		virtual void runFrame() = 0;
 
+		/**
+		 * Allows game to modify OpenGL initialization options.
+		 * @param options Reference to OpenGL initialization options that could be modified by the game.
+		 * @warning This method is called before the init() method.
+		 */
+		virtual void configureOpenGL(OpenGLInitOptions & options);
+
+		/**
+		 * Returns width of the viewport.
+		 * @return Width of the viewport.
+		 */
+		inline int viewportWidth() const noexcept { return m_ViewportWidth; }
+
+		/**
+		 * Returns height of the viewport.
+		 * @return Height of the viewport.
+		 */
+		inline int viewportHeight() const noexcept { return m_ViewportHeight; }
+
+		/** @cond */
+		inline void setViewportSize_(int w, int h) { m_ViewportWidth = w; m_ViewportHeight = h; }
+		/** @endcond */
+
 	private:
+		int m_ViewportWidth;
+		int m_ViewportHeight;
+
 		Main(const Main &) = delete;
 		Main & operator=(const Main &) = delete;
 	};

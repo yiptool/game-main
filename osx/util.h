@@ -20,27 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#include "game_main.h"
-#include <cassert>
 
-extern "C" void * c9737b5fd();
+#import <Foundation/Foundation.h>
+#import <yip-imports/cxx-util/macros.h>
+#import <setjmp.h>
+#import "../opengl_init_options.h"
 
-Game::Main::Main() noexcept
-	: m_ViewportWidth(0),
-	  m_ViewportHeight(0)
-{
-}
+extern OpenGLInitOptions g_OpenGLInitOptions;
 
-Game::Main::~Main() noexcept
-{
-}
-
-Game::Main * Game::Main::instance() noexcept
-{
-	return reinterpret_cast<Game::Main *>(c9737b5fd());
-}
-
-void Game::Main::configureOpenGL(OpenGLInitOptions & options)
-{
-	(void)options;
-}
+void OSX_DisplayError(NSString * title, NSString * message);
+NORETURN void OSX_ThrowError(NSString * message, NSString * title = @"Fatal error");
+void OSX_CatchExceptions(void (^ code)());

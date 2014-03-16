@@ -21,38 +21,17 @@
 // THE SOFTWARE.
 //
 #import <Cocoa/Cocoa.h>
-
-static void initMainMenu(NSApplication * application)
-{
-	NSString * programName = [[[NSProcessInfo processInfo] processName] capitalizedString];
-	NSString * quitTitle = [@"Quit " stringByAppendingString:programName];
-
-	NSMenuItem * quitMenuItem = [[NSMenuItem alloc] autorelease];
-	[quitMenuItem initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
-
-	NSMenu * appMenu = [[NSMenu new] autorelease];
-	[appMenu addItem:quitMenuItem];
-
-	NSMenuItem * appMenuItem = [[NSMenuItem new] autorelease];
-	[appMenuItem setSubmenu:appMenu];
-
-	NSMenu * mainMenu = [[NSMenu new] autorelease];
-	[mainMenu addItem:appMenuItem];
-
-	[application setMainMenu:mainMenu];
-}
+#import <exception>
+#import "application.h"
+#import "util.h"
 
 int main(int argc, char ** argv)
 {
 	@autoreleasepool
 	{
-		NSApplication * application = [NSApplication sharedApplication];
-
-		initMainMenu(application);
-
-		[application setActivationPolicy:NSApplicationActivationPolicyRegular];
-		[application activateIgnoringOtherApps:YES];
-		[application run];
+		OSX_CatchExceptions(^{
+			[[Application sharedApplication] run];
+		});
 	}
 
 	return 0;
