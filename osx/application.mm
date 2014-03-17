@@ -53,6 +53,7 @@
 	{
 		OSX_CatchExceptions(^{
 			self.glWindow = [[[GLWindow alloc] init] autorelease];
+			[glWindow center];
 			[glWindow makeKeyAndOrderFront:self];
 		});
 		[self setActivationPolicy:NSApplicationActivationPolicyRegular];
