@@ -8,7 +8,7 @@ osx:framework OpenGL
 
 public_headers
 {
-	game_main.h
+	game_instance.h
 	key_code.h
 	mouse_button.h
 	opengl_init_options.h
@@ -23,6 +23,6 @@ sources:osx
 	osx/main.mm
 	osx/util.h
 	osx/util.mm
-	game_main.cpp
+	game_instance.cpp
 	key_code.cpp
 }

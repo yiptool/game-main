@@ -23,7 +23,7 @@
 #import "gl_window.h"
 #import "application.h"
 #import "util.h"
-#import "../game_main.h"
+#import "../game_instance.h"
 #import "../key_code.h"
 #import <algorithm>
 
@@ -73,7 +73,7 @@
 	if (initialized)
 	{
 		[context makeCurrentContext];
-		Game::Main::instance()->cleanup();
+		GameInstance::instance()->cleanup_();
 		initialized = false;
 	}
 
@@ -111,15 +111,15 @@
 	NSRect bounds = [self convertRectToBacking:[self bounds]];
 	int width = (int)bounds.size.width;
 	int height = (int)bounds.size.height;
-	Game::Main::instance()->setViewportSize_(width, height);
+	GameInstance::instance()->setViewportSize_(width, height);
 
 	if (!initialized)
 	{
-		Game::Main::instance()->init();
+		GameInstance::instance()->init();
 		initialized = YES;
 	}
 
-	Game::Main::instance()->runFrame();
+	GameInstance::instance()->runFrame_();
 
 	[context flushBuffer];
 }
@@ -135,7 +135,7 @@
 {
 	// Query OpenGL settings
 	OpenGLInitOptions opt;
-	Game::Main::instance()->configureOpenGL(opt);
+	GameInstance::instance()->configureOpenGL(opt);
 
 	// Create the window (call parent constructor)
 	NSUInteger styleMask = (opt.fullscreen ? FULLSCREEN_STYLE_MASK : WINDOWED_STYLE_MASK);
@@ -225,28 +225,28 @@
 -(void)mouseDragged:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseMove(x, y);
+		GameInstance::instance()->onMouseMove(x, y);
 	}];
 }
 
 -(void)rightMouseDragged:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseMove(x, y);
+		GameInstance::instance()->onMouseMove(x, y);
 	}];
 }
 
 -(void)otherMouseDragged:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseMove(x, y);
+		GameInstance::instance()->onMouseMove(x, y);
 	}];
 }
 
 -(void)mouseMoved:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseMove(x, y);
+		GameInstance::instance()->onMouseMove(x, y);
 	}];
 }
 
@@ -255,28 +255,28 @@
 -(void)mouseDown:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonDown(x, y, Sys::LeftButton);
+		GameInstance::instance()->onMouseButtonDown(x, y, Sys::LeftButton);
 	}];
 }
 
 -(void)mouseUp:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonUp(x, y, Sys::LeftButton);
+		GameInstance::instance()->onMouseButtonUp(x, y, Sys::LeftButton);
 	}];
 }
 
 -(void)rightMouseDown:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonDown(x, y, Sys::RightButton);
+		GameInstance::instance()->onMouseButtonDown(x, y, Sys::RightButton);
 	}];
 }
 
 -(void)rightMouseUp:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonUp(x, y, Sys::RightButton);
+		GameInstance::instance()->onMouseButtonUp(x, y, Sys::RightButton);
 	}];
 }
 
@@ -285,7 +285,7 @@
 	if (event.buttonNumber != 2)
 		return;
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonDown(x, y, Sys::MiddleButton);
+		GameInstance::instance()->onMouseButtonDown(x, y, Sys::MiddleButton);
 	}];
 }
 
@@ -294,7 +294,7 @@
 	if (event.buttonNumber != 2)
 		return;
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonUp(x, y, Sys::MiddleButton);
+		GameInstance::instance()->onMouseButtonUp(x, y, Sys::MiddleButton);
 	}];
 }
 
@@ -446,7 +446,7 @@ static Sys::KeyCode mapKeyFromOSX(unsigned short key)
 
 -(void)keyDown:(NSEvent *)event
 {
-	Game::Main::instance()->onKeyPress(mapKeyFromOSX(event.keyCode));
+	GameInstance::instance()->onKeyPress(mapKeyFromOSX(event.keyCode));
 
 	NSString * text = event.characters;
 	NSUInteger length = text.length;
@@ -455,13 +455,13 @@ static Sys::KeyCode mapKeyFromOSX(unsigned short key)
 		uint32_t ch = [text characterAtIndex:i];
 		if (ch >= 0xD800 && ch < 0xF900)				// Ignore surrogate pairs and private use area
 			continue;
-		Game::Main::instance()->onCharInput(ch);
+		GameInstance::instance()->onCharInput(ch);
 	}
 }
 
 -(void)keyUp:(NSEvent *)event
 {
-	Game::Main::instance()->onKeyRelease(mapKeyFromOSX(event.keyCode));
+	GameInstance::instance()->onKeyRelease(mapKeyFromOSX(event.keyCode));
 }
 
 -(void)flagsChanged:(NSEvent *)event
@@ -472,9 +472,9 @@ static Sys::KeyCode mapKeyFromOSX(unsigned short key)
 
 	Sys::KeyCode keyCode = mapKeyFromOSX(event.keyCode);
 	if (isPress)
-		Game::Main::instance()->onKeyPress(keyCode);
+		GameInstance::instance()->onKeyPress(keyCode);
 	else
-		Game::Main::instance()->onKeyRelease(keyCode);
+		GameInstance::instance()->onKeyRelease(keyCode);
 }
 
 @end

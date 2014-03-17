@@ -20,70 +20,92 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#include "game_main.h"
+#include "game_instance.h"
 #include <cassert>
+#include <stdexcept>
 
 extern "C" void * c9737b5fd();
 
-Game::Main::Main() noexcept
-	: m_ViewportWidth(0),
+GameInstance::GameInstance() noexcept
+	: m_ResourceManagerDestroyed(false),
+	  m_ViewportWidth(0),
 	  m_ViewportHeight(0)
 {
 }
 
-Game::Main::~Main() noexcept
+GameInstance::~GameInstance() noexcept
 {
 }
 
-Game::Main * Game::Main::instance() noexcept
+GameInstance * GameInstance::instance() noexcept
 {
-	return reinterpret_cast<Game::Main *>(c9737b5fd());
+	return reinterpret_cast<GameInstance *>(c9737b5fd());
 }
 
-const GL::ResourceManagerPtr & Game::Main::resourceManager() const
+const GL::ResourceManagerPtr & GameInstance::resourceManager() const
 {
 	if (LIKELY(m_ResourceManager))
 		return m_ResourceManager;
+	if (UNLIKELY(m_ResourceManagerDestroyed))
+		throw std::runtime_error("resource manager has been destroyed.");
 	m_ResourceManager = std::make_shared<GL::ResourceManager>();
 	return m_ResourceManager;
 }
 
-void Game::Main::configureOpenGL(OpenGLInitOptions & options)
+void GameInstance::cleanup_()
+{
+	m_ResourceManagerDestroyed = true;
+	if (m_ResourceManager)
+	{
+		m_ResourceManager->destroyAllResources();
+		m_ResourceManager.reset();
+	}
+	cleanup();
+}
+
+void GameInstance::runFrame_()
+{
+	if (m_ResourceManager)
+		m_ResourceManager->collectGarbage();
+	runFrame();
+}
+
+void GameInstance::configureOpenGL(OpenGLInitOptions & options)
 {
 	(void)options;
 }
 
-void Game::Main::onMouseButtonDown(int x, int y, Sys::MouseButton button)
+void GameInstance::onMouseButtonDown(int x, int y, Sys::MouseButton button)
 {
 	(void)x;
 	(void)y;
 	(void)button;
 }
 
-void Game::Main::onMouseButtonUp(int x, int y, Sys::MouseButton button)
+void GameInstance::onMouseButtonUp(int x, int y, Sys::MouseButton button)
 {
 	(void)x;
 	(void)y;
 	(void)button;
 }
 
-void Game::Main::onMouseMove(int x, int y)
+void GameInstance::onMouseMove(int x, int y)
 {
 	(void)x;
 	(void)y;
 }
 
-void Game::Main::onKeyPress(Sys::KeyCode key)
+void GameInstance::onKeyPress(Sys::KeyCode key)
 {
 	(void)key;
 }
 
-void Game::Main::onKeyRelease(Sys::KeyCode key)
+void GameInstance::onKeyRelease(Sys::KeyCode key)
 {
 	(void)key;
 }
 
-void Game::Main::onCharInput(uint16_t ch)
+void GameInstance::onCharInput(uint16_t ch)
 {
 	(void)ch;
 }
