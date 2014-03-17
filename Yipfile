@@ -1,4 +1,5 @@
 
+import gl_wrappers
 import cxx-util
 
 osx:framework Cocoa

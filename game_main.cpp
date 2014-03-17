@@ -40,6 +40,14 @@ Game::Main * Game::Main::instance() noexcept
 	return reinterpret_cast<Game::Main *>(c9737b5fd());
 }
 
+const GL::ResourceManagerPtr & Game::Main::resourceManager() const
+{
+	if (LIKELY(m_ResourceManager))
+		return m_ResourceManager;
+	m_ResourceManager = std::make_shared<GL::ResourceManager>();
+	return m_ResourceManager;
+}
+
 void Game::Main::configureOpenGL(OpenGLInitOptions & options)
 {
 	(void)options;

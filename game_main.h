@@ -64,6 +64,12 @@ namespace Game
 		static Main * instance() noexcept;
 
 		/**
+		 * Returns pointer to the OpenGL resource manager.
+		 * @return Pointer to the OpenGL resource manager.
+		 */
+		const GL::ResourceManagerPtr & resourceManager() const;
+
+		/**
 		 * Returns width of the viewport.
 		 * @return Width of the viewport.
 		 */
@@ -149,6 +155,7 @@ namespace Game
 		virtual void onCharInput(uint16_t ch);
 
 	private:
+		GL::ResourceManagerPtr m_ResourceManager;
 		int m_ViewportWidth;
 		int m_ViewportHeight;
 
