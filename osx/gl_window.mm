@@ -255,28 +255,28 @@
 -(void)mouseDown:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonDown(x, y, Game::LeftButton);
+		Game::Main::instance()->onMouseButtonDown(x, y, Sys::LeftButton);
 	}];
 }
 
 -(void)mouseUp:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonUp(x, y, Game::LeftButton);
+		Game::Main::instance()->onMouseButtonUp(x, y, Sys::LeftButton);
 	}];
 }
 
 -(void)rightMouseDown:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonDown(x, y, Game::RightButton);
+		Game::Main::instance()->onMouseButtonDown(x, y, Sys::RightButton);
 	}];
 }
 
 -(void)rightMouseUp:(NSEvent *)event
 {
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonUp(x, y, Game::RightButton);
+		Game::Main::instance()->onMouseButtonUp(x, y, Sys::RightButton);
 	}];
 }
 
@@ -285,7 +285,7 @@
 	if (event.buttonNumber != 2)
 		return;
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonDown(x, y, Game::MiddleButton);
+		Game::Main::instance()->onMouseButtonDown(x, y, Sys::MiddleButton);
 	}];
 }
 
@@ -294,7 +294,7 @@
 	if (event.buttonNumber != 2)
 		return;
 	[view transformEventLocation:event andInvoke:^(int x, int y) {
-		Game::Main::instance()->onMouseButtonUp(x, y, Game::MiddleButton);
+		Game::Main::instance()->onMouseButtonUp(x, y, Sys::MiddleButton);
 	}];
 }
 

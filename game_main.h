@@ -24,6 +24,7 @@
 #define __9c737b5fd1ba40f53025d5221a5f0032__
 
 #include <yip-imports/cxx-util/macros.h>
+#include "mouse_button.h"
 #include "key_code.h"
 #include "opengl_init_options.h"
 #include <cstdint>
@@ -31,14 +32,6 @@
 
 namespace Game
 {
-	/** Mouse button. */
-	enum MouseButton
-	{
-		LeftButton = 0,
-		RightButton,
-		MiddleButton
-	};
-
 	/**
 	 * Base class for games created using this framework.
 	 *
@@ -120,7 +113,7 @@ namespace Game
 		 * @param y Y coordinate where user has pressed the button.
 		 * @param button Button that has been pressed.
 		 */
-		virtual void onMouseButtonDown(int x, int y, MouseButton button);
+		virtual void onMouseButtonDown(int x, int y, Sys::MouseButton button);
 
 		/**
 		 * Called when user releases mouse button over the viewport.
@@ -128,7 +121,7 @@ namespace Game
 		 * @param y Y coordinate where user has released the button.
 		 * @param button Button that has been released.
 		 */
-		virtual void onMouseButtonUp(int x, int y, MouseButton button);
+		virtual void onMouseButtonUp(int x, int y, Sys::MouseButton button);
 
 		/**
 		 * Called when user moves the mouse over the viewport.

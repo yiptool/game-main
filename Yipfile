@@ -9,6 +9,7 @@ public_headers
 {
 	game_main.h
 	key_code.h
+	mouse_button.h
 	opengl_init_options.h
 }
 

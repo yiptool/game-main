@@ -20,62 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#include "game_main.h"
-#include <cassert>
+#ifndef __58ace8a10be516df90ed450734d454cf__
+#define __58ace8a10be516df90ed450734d454cf__
 
-extern "C" void * c9737b5fd();
-
-Game::Main::Main() noexcept
-	: m_ViewportWidth(0),
-	  m_ViewportHeight(0)
+namespace Sys
 {
+	/** Mouse button. */
+	enum MouseButton
+	{
+		LeftButton = 0,
+		RightButton,
+		MiddleButton
+	};
 }
 
-Game::Main::~Main() noexcept
-{
-}
-
-Game::Main * Game::Main::instance() noexcept
-{
-	return reinterpret_cast<Game::Main *>(c9737b5fd());
-}
-
-void Game::Main::configureOpenGL(OpenGLInitOptions & options)
-{
-	(void)options;
-}
-
-void Game::Main::onMouseButtonDown(int x, int y, Sys::MouseButton button)
-{
-	(void)x;
-	(void)y;
-	(void)button;
-}
-
-void Game::Main::onMouseButtonUp(int x, int y, Sys::MouseButton button)
-{
-	(void)x;
-	(void)y;
-	(void)button;
-}
-
-void Game::Main::onMouseMove(int x, int y)
-{
-	(void)x;
-	(void)y;
-}
-
-void Game::Main::onKeyPress(Sys::KeyCode key)
-{
-	(void)key;
-}
-
-void Game::Main::onKeyRelease(Sys::KeyCode key)
-{
-	(void)key;
-}
-
-void Game::Main::onCharInput(uint16_t ch)
-{
-	(void)ch;
-}
+#endif
