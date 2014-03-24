@@ -35,6 +35,12 @@ public_headers
 	opengl_init_options.h
 }
 
+sources
+{
+	game_instance.cpp
+	key_code.cpp
+}
+
 sources:osx
 {
 	osx/application.h
@@ -44,6 +50,4 @@ sources:osx
 	osx/main.mm
 	osx/util.h
 	osx/util.mm
-	game_instance.cpp
-	key_code.cpp
 }
