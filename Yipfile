@@ -23,6 +23,8 @@ THE SOFTWARE."
 import gl_wrappers
 import cxx-util
 
+tizen:privilege "http://tizen.org/privilege/power"
+
 osx:framework Cocoa
 osx:framework QuartzCore
 osx:framework OpenGL
