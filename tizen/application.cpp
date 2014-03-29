@@ -85,6 +85,10 @@ bool TizenPort::Application::OnAppInitializing(Tizen::App::AppRegistry & appRegi
 		m_Renderer = new OpenGLRenderer;
 		r = m_Player->SetIGlRenderer(m_Renderer);
 		TryReturn(!IsFailed(r), r, "unable to activate the OpenGL ES 2.0 renderer.");
+
+		// Prevent Tizen from turning screen off
+		r = Tizen::System::PowerManager::KeepScreenOnState(true, false);
+		TryLog(!IsFailed(r), "unable to enable the 'KeepScreenOn' state.");
 	}
 	catch (const std::exception & e)
 	{
