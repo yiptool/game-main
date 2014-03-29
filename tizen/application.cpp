@@ -55,12 +55,14 @@ bool TizenPort::Application::OnAppInitializing(Tizen::App::AppRegistry & appRegi
 		r = m_Frame->Construct();
 		TryReturn(!IsFailed(r), r, "unable to create OpenGL frame.");
 
+		// Register event listeners
+		m_Frame->AddFrameEventListener(*m_Frame);
+		m_Frame->AddTouchEventListener(*m_Frame);
+		// m_Frame->AddKeyEventListener(*this);
+
 		// Add OpenGL frame into the application
 		r = AddFrame(*m_Frame);
 		TryReturn(!IsFailed(r), r, "unable to add OpenGL frame into the application.");
-
-		// FIXME
-		// m_Frame->AddKeyEventListener(*this);
 
 		// Create OpenGL player
 		m_Player = new Tizen::Graphics::Opengl::GlPlayer;
@@ -85,10 +87,6 @@ bool TizenPort::Application::OnAppInitializing(Tizen::App::AppRegistry & appRegi
 		m_Renderer = new OpenGLRenderer;
 		r = m_Player->SetIGlRenderer(m_Renderer);
 		TryReturn(!IsFailed(r), r, "unable to activate the OpenGL ES 2.0 renderer.");
-
-		// Prevent Tizen from turning screen off
-		r = Tizen::System::PowerManager::KeepScreenOnState(true, false);
-		TryLog(!IsFailed(r), "unable to enable the 'KeepScreenOn' state.");
 	}
 	catch (const std::exception & e)
 	{

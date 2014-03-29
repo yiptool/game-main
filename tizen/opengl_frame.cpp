@@ -21,6 +21,8 @@
 // THE SOFTWARE.
 //
 #include "opengl_frame.h"
+#include "../game_instance.h"
+#include <FApp.h>
 
 result TizenPort::OpenGLFrame::OnInitializing()
 {
@@ -30,4 +32,81 @@ result TizenPort::OpenGLFrame::OnInitializing()
 result TizenPort::OpenGLFrame::OnTerminating()
 {
 	return E_SUCCESS;
+}
+
+void TizenPort::OpenGLFrame::OnFrameActivated(const Tizen::Ui::Controls::Frame & source)
+{
+	result r = Tizen::System::PowerManager::KeepScreenOnState(true, false);
+	TryLog(!IsFailed(r), "unable to enable the 'KeepScreenOn' state.");
+}
+
+void TizenPort::OpenGLFrame::OnFrameTerminating(const Tizen::Ui::Controls::Frame & source)
+{
+}
+
+void TizenPort::OpenGLFrame::OnTouchCanceled(const Control & src, const Point & pos, const TouchEventInfo & info)
+{
+}
+
+void TizenPort::OpenGLFrame::OnTouchFocusIn(const Control & src, const Point & pos, const TouchEventInfo & info)
+{
+}
+
+void TizenPort::OpenGLFrame::OnTouchFocusOut(const Control & src, const Point & pos, const TouchEventInfo & info)
+{
+}
+
+void TizenPort::OpenGLFrame::OnTouchMoved(const Control & src, const Point & pos, const TouchEventInfo & info)
+{
+}
+
+void TizenPort::OpenGLFrame::OnTouchPressed(const Control & src, const Point & pos, const TouchEventInfo & info)
+{
+	// FIXME FIXME FIXME
+
+	static bool left = false, right = false;
+	bool newLeft = false, newRight = false;
+
+	int width = GetWidth();
+	int x1 = width / 3;
+	int x2 = 2 * x1;
+
+	if (pos.x < x1)
+		newLeft = true;
+	else if (pos.x > x2)
+		newRight = true;
+
+	if (newLeft != left)
+	{
+		left = newLeft;
+		if (newLeft)
+		{
+			AppLog("LEFT DOWN");
+			GameInstance::instance()->onKeyPress(Sys::Key_Left);
+		}
+		else
+		{
+			AppLog("LEFT UP");
+			GameInstance::instance()->onKeyRelease(Sys::Key_Left);
+		}
+	}
+
+	if (newRight != right)
+	{
+		right = newRight;
+		if (newRight)
+		{
+			AppLog("RIGHT DOWN");
+			GameInstance::instance()->onKeyPress(Sys::Key_Right);
+		}
+		else
+		{
+			AppLog("RIGHT UP");
+			GameInstance::instance()->onKeyRelease(Sys::Key_Right);
+		}
+	}
+}
+
+void TizenPort::OpenGLFrame::OnTouchReleased(const Control & src, const Point & pos, const TouchEventInfo & info)
+{
 }

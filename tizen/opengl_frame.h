@@ -27,11 +27,27 @@
 
 namespace TizenPort
 {
-	class OpenGLFrame : public Tizen::Ui::Controls::Frame
+	using Tizen::Graphics::Point;
+	using Tizen::Ui::Control;
+	using Tizen::Ui::TouchEventInfo;
+
+	class OpenGLFrame : public Tizen::Ui::Controls::Frame,
+						public Tizen::Ui::Controls::IFrameEventListener,
+						public Tizen::Ui::ITouchEventListener
 	{
 	public:
 		result OnInitializing() override;
 		result OnTerminating() override;
+
+		void OnFrameActivated(const Tizen::Ui::Controls::Frame & source) override;
+		void OnFrameTerminating(const Tizen::Ui::Controls::Frame & source) override;
+
+		void OnTouchCanceled(const Control & src, const Point & pos, const TouchEventInfo & info) override;
+		void OnTouchFocusIn(const Control & src, const Point & pos, const TouchEventInfo & info) override;
+		void OnTouchFocusOut(const Control & src, const Point & pos, const TouchEventInfo & info) override;
+		void OnTouchMoved(const Control & src, const Point & pos, const TouchEventInfo & info) override;
+		void OnTouchPressed(const Control & src, const Point & pos, const TouchEventInfo & info) override;
+		void OnTouchReleased(const Control & src, const Point & pos, const TouchEventInfo & info) override;
 	};
 }
 
