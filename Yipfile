@@ -56,4 +56,9 @@ sources:tizen
 {
 	tizen/application.cpp
 	tizen/application.h
+	tizen/main.cpp
+	tizen/opengl_frame.cpp
+	tizen/opengl_frame.h
+	tizen/opengl_renderer.cpp
+	tizen/opengl_renderer.h
 }

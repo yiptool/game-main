@@ -20,32 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#ifndef __6fb0917922913ade569c16a93e5775fc__
-#define __6fb0917922913ade569c16a93e5775fc__
+#ifndef __73784bdcdc3f16e4e852580e03faff1c__
+#define __73784bdcdc3f16e4e852580e03faff1c__
 
-#include <FBase.h>
-#include <FApp.h>
-#include <FGrpGlPlayer.h>
+#include <FGrpIGlRenderer.h>
 
 namespace TizenPort
 {
-	class OpenGLFrame;
-
-	class Application : public Tizen::App::UiApp
+	class OpenGLRenderer : public Tizen::Graphics::Opengl::IGlRenderer
 	{
 	public:
-		Application();
-		~Application();
+		OpenGLRenderer();
+		~OpenGLRenderer();
 
-		bool OnAppInitializing(Tizen::App::AppRegistry & appRegistry) override;
-		bool OnAppTerminating(Tizen::App::AppRegistry & appRegistry, bool urgentTermination = false) override;
+		bool InitializeGl() override;
+		bool TerminateGl() override;
+
+		bool Draw() override;
+
+		bool Pause() override;
+		bool Resume() override;
+
+		int GetTargetControlWidth() override;
+		int GetTargetControlHeight() override;
+		void SetTargetControlWidth(int width) override;
+		void SetTargetControlHeight(int height) override;
 
 	private:
-		OpenGLFrame * m_Frame;
-		Tizen::Graphics::Opengl::GlPlayer * m_Player;
-		Tizen::Graphics::Opengl::IGlRenderer * m_Renderer;
-
-		void cleanup() noexcept;
+		int m_ControlWidth;
+		int m_ControlHeight;
 	};
 }
 

@@ -20,33 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#ifndef __6fb0917922913ade569c16a93e5775fc__
-#define __6fb0917922913ade569c16a93e5775fc__
+#include "application.h"
 
-#include <FBase.h>
-#include <FApp.h>
-#include <FGrpGlPlayer.h>
-
-namespace TizenPort
+static Tizen::App::Application * CreateApp()
 {
-	class OpenGLFrame;
-
-	class Application : public Tizen::App::UiApp
-	{
-	public:
-		Application();
-		~Application();
-
-		bool OnAppInitializing(Tizen::App::AppRegistry & appRegistry) override;
-		bool OnAppTerminating(Tizen::App::AppRegistry & appRegistry, bool urgentTermination = false) override;
-
-	private:
-		OpenGLFrame * m_Frame;
-		Tizen::Graphics::Opengl::GlPlayer * m_Player;
-		Tizen::Graphics::Opengl::IGlRenderer * m_Renderer;
-
-		void cleanup() noexcept;
-	};
+	return new (std::nothrow) TizenPort::Application;
 }
 
-#endif
+extern "C"
+{
+	_EXPORT_ int OspMain(int argc, char ** pArgv)
+	{
+		Tizen::Base::Collection::ArrayList args(Tizen::Base::Collection::SingleObjectDeleter);
+
+		args.Construct();
+		for (int i = 0; i < argc; i++)
+			args.Add(*(new (std::nothrow) Tizen::Base::String(pArgv[i])));
+
+		result r = Tizen::App::Application::Execute(CreateApp, &args);
+		TryLog(r == E_SUCCESS, "[%s] Application execution failed", GetErrorMessage(r));
+
+		return static_cast<int>(r);
+	}
+}

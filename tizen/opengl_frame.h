@@ -20,32 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#ifndef __6fb0917922913ade569c16a93e5775fc__
-#define __6fb0917922913ade569c16a93e5775fc__
+#ifndef __1625b8e499fd3146865212e5ccf4fc07__
+#define __1625b8e499fd3146865212e5ccf4fc07__
 
-#include <FBase.h>
-#include <FApp.h>
-#include <FGrpGlPlayer.h>
+#include <FUi.h>
 
 namespace TizenPort
 {
-	class OpenGLFrame;
-
-	class Application : public Tizen::App::UiApp
+	class OpenGLFrame : public Tizen::Ui::Controls::Frame
 	{
 	public:
-		Application();
-		~Application();
-
-		bool OnAppInitializing(Tizen::App::AppRegistry & appRegistry) override;
-		bool OnAppTerminating(Tizen::App::AppRegistry & appRegistry, bool urgentTermination = false) override;
-
-	private:
-		OpenGLFrame * m_Frame;
-		Tizen::Graphics::Opengl::GlPlayer * m_Player;
-		Tizen::Graphics::Opengl::IGlRenderer * m_Renderer;
-
-		void cleanup() noexcept;
+		result OnInitializing() override;
+		result OnTerminating() override;
 	};
 }
 

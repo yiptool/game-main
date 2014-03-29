@@ -20,87 +20,105 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+#include "../game_instance.h"
 #include "application.h"
-#include <new>
-#include <FBase.h>
-#include <FUi.h>
-#include <FApp.h>
-#include <FGraphicsOpengl2.h>
-
-//using namespace Tizen::Base;
-//using namespace Tizen::Base::Collection;
-//using namespace Tizen::Base::Runtime;
-//using namespace Tizen::Graphics;
-//using namespace Tizen::Locales;
-//using namespace Tizen::System;
-//using namespace Tizen::App;
-//using namespace Tizen::System;
-//using namespace Tizen::Ui;
-//using namespace Tizen::Ui::Controls;
-//using namespace Tizen::Graphics::Opengl;
-
-/* OpenGLForm */
-
-namespace
-{
-	class OpenGLForm : public Tizen::Ui::Controls::Form
-	{
-	public:
-		result OnDraw() override;
-	};
-}
-
-result OpenGLForm::OnDraw()
-{
-	return E_SUCCESS;
-}
-
+#include "opengl_renderer.h"
+#include "opengl_frame.h"
 
 /* TizenApplication */
 
-namespace
+TizenPort::Application::Application()
+	: m_Frame(nullptr),
+	  m_Player(nullptr),
+	  m_Renderer(nullptr)
 {
-	class TizenApplication : public Tizen::App::Application
-	{
-	public:
-		bool OnAppInitializing(Tizen::App::AppRegistry & appRegistry) override;
-		bool OnAppTerminating(Tizen::App::AppRegistry & appRegistry, bool urgentTermination = false) override;
-	};
 }
 
-bool TizenApplication::OnAppInitializing(Tizen::App::AppRegistry & appRegistry)
+TizenPort::Application::~Application()
 {
+}
+
+bool TizenPort::Application::OnAppInitializing(Tizen::App::AppRegistry & appRegistry)
+{
+	result r;
+
+	(void)appRegistry;
+
+	try
+	{
+		// Query OpenGL settings
+		OpenGLInitOptions opt;
+		GameInstance::instance()->configureOpenGL(opt);
+
+		// Create OpenGL frame
+		m_Frame = new OpenGLFrame;
+		r = m_Frame->Construct();
+		TryReturn(!IsFailed(r), r, "unable to create OpenGL frame.");
+
+		// Add OpenGL frame into the application
+		r = AddFrame(*m_Frame);
+		TryReturn(!IsFailed(r), r, "unable to add OpenGL frame into the application.");
+
+		// FIXME
+		// m_Frame->AddKeyEventListener(*this);
+
+		// Create OpenGL player
+		m_Player = new Tizen::Graphics::Opengl::GlPlayer;
+		r = m_Player->Construct(Tizen::Graphics::Opengl::EGL_CONTEXT_CLIENT_VERSION_2_X, m_Frame);
+		TryReturn(!IsFailed(r), r, "unable to create OpenGL ES 2.0 player.");
+
+		// Set desired frame rate
+		m_Player->SetFps(60);
+
+		// Configure the OpenGL player
+		if (opt.alphaBits > 0 || opt.redBits + opt.greenBits + opt.blueBits > 16)
+			r = m_Player->SetEglAttributePreset(Tizen::Graphics::Opengl::EGL_ATTRIBUTES_PRESET_ARGB8888);
+		else
+			r = m_Player->SetEglAttributePreset(Tizen::Graphics::Opengl::EGL_ATTRIBUTES_PRESET_RGB565);
+		TryReturn(!IsFailed(r), r, "unable to set color depth for the OpenGL ES 2.0 player.");
+
+		// Start the OpenGL player
+		r = m_Player->Start();
+		TryReturn(!IsFailed(r), r, "unable to start the OpenGL ES 2.0 player.");
+
+		// Create the OpenGL renderer
+		m_Renderer = new OpenGLRenderer;
+		r = m_Player->SetIGlRenderer(m_Renderer);
+		TryReturn(!IsFailed(r), r, "unable to activate the OpenGL ES 2.0 renderer.");
+	}
+	catch (const std::exception & e)
+	{
+		AppLogException(e.what());
+		cleanup();
+		return false;
+	}
+
+	AppLog("App initialization successful.");
+
 	return true;
 }
 
-bool TizenApplication::OnAppTerminating(Tizen::App::AppRegistry & appRegistry, bool urgentTermination)
+bool TizenPort::Application::OnAppTerminating(Tizen::App::AppRegistry & appRegistry, bool urgentTermination)
 {
+	cleanup();
 	return true;
 }
 
-
-/* Entry point */
-
-static Tizen::App::Application * CreateApp()
+void TizenPort::Application::cleanup() noexcept
 {
-	return new (std::nothrow) TizenApplication;
-}
-
-extern "C"
-{
-	_EXPORT_ int OspMain(int argc, char ** pArgv)
+	try
 	{
-		Tizen::Base::Collection::ArrayList args;
+		if (m_Player)
+			m_Player->Stop();
 
-		args.Construct();
-		for (int i = 0; i < argc; i++)
-			args.Add(*(new (std::nothrow) Tizen::Base::String(pArgv[i])));
+		delete m_Renderer;
+		m_Renderer = NULL;
 
-		result r = Tizen::App::Application::Execute(CreateApp, &args);
-		TryLog(r == E_SUCCESS, "[%s] Application execution failed", GetErrorMessage(r));
-
-		args.RemoveAll(true);
-
-		return static_cast<int>(r);
+		delete m_Player;
+		m_Player = NULL;
+	}
+	catch (const std::exception & e)
+	{
+		AppLogException(e.what());
 	}
 }
