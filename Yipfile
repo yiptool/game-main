@@ -51,3 +51,9 @@ sources:osx
 	osx/util.h
 	osx/util.mm
 }
+
+sources:tizen
+{
+	tizen/application.cpp
+	tizen/application.h
+}
