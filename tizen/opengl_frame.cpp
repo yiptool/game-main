@@ -24,6 +24,53 @@
 #include "../game_instance.h"
 #include <FApp.h>
 
+// FIXME FIXME FIXME
+static bool left = false, right = false, middle = false;
+static void keyPressRelease(int x, int y, int width, bool press)
+{
+	bool newLeft = false, newRight = false, newMiddle = false;
+
+	if (press)
+	{
+		int x1 = width / 3;
+		int x2 = 2 * x1;
+
+		if (x < x1)
+			newLeft = true;
+		else if (x > x2)
+			newRight = true;
+		else
+			newMiddle = true;
+	}
+
+	if (newLeft != left)
+	{
+		left = newLeft;
+		if (newLeft)
+			GameInstance::instance()->onKeyPress(Sys::Key_Left);
+		else
+			GameInstance::instance()->onKeyRelease(Sys::Key_Left);
+	}
+
+	if (newRight != right)
+	{
+		right = newRight;
+		if (newRight)
+			GameInstance::instance()->onKeyPress(Sys::Key_Right);
+		else
+			GameInstance::instance()->onKeyRelease(Sys::Key_Right);
+	}
+
+	if (newMiddle != middle)
+	{
+		middle = newMiddle;
+		if (newMiddle)
+			GameInstance::instance()->onKeyPress(Sys::Key_Enter);
+		else
+			GameInstance::instance()->onKeyRelease(Sys::Key_Enter);
+	}
+}
+
 result TizenPort::OpenGLFrame::OnInitializing()
 {
 	return E_SUCCESS;
@@ -58,55 +105,15 @@ void TizenPort::OpenGLFrame::OnTouchFocusOut(const Control & src, const Point & 
 
 void TizenPort::OpenGLFrame::OnTouchMoved(const Control & src, const Point & pos, const TouchEventInfo & info)
 {
+	keyPressRelease(pos.x, pos.y, GetWidth(), true);
 }
 
 void TizenPort::OpenGLFrame::OnTouchPressed(const Control & src, const Point & pos, const TouchEventInfo & info)
 {
-	// FIXME FIXME FIXME
-
-	static bool left = false, right = false;
-	bool newLeft = false, newRight = false;
-
-	int width = GetWidth();
-	int x1 = width / 3;
-	int x2 = 2 * x1;
-
-	if (pos.x < x1)
-		newLeft = true;
-	else if (pos.x > x2)
-		newRight = true;
-
-	if (newLeft != left)
-	{
-		left = newLeft;
-		if (newLeft)
-		{
-			AppLog("LEFT DOWN");
-			GameInstance::instance()->onKeyPress(Sys::Key_Left);
-		}
-		else
-		{
-			AppLog("LEFT UP");
-			GameInstance::instance()->onKeyRelease(Sys::Key_Left);
-		}
-	}
-
-	if (newRight != right)
-	{
-		right = newRight;
-		if (newRight)
-		{
-			AppLog("RIGHT DOWN");
-			GameInstance::instance()->onKeyPress(Sys::Key_Right);
-		}
-		else
-		{
-			AppLog("RIGHT UP");
-			GameInstance::instance()->onKeyRelease(Sys::Key_Right);
-		}
-	}
+	keyPressRelease(pos.x, pos.y, GetWidth(), true);
 }
 
 void TizenPort::OpenGLFrame::OnTouchReleased(const Control & src, const Point & pos, const TouchEventInfo & info)
 {
+	keyPressRelease(pos.x, pos.y, GetWidth(), false);
 }
