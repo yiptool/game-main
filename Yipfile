@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE."
 
-import gl_wrappers
+import gles2_wrappers
 import cxx-util
 
 tizen:privilege "http://tizen.org/privilege/power"
