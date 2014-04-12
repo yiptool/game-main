@@ -114,10 +114,10 @@ void TizenPort::Application::cleanup() noexcept
 			m_Player->Stop();
 
 		delete m_Renderer;
-		m_Renderer = NULL;
+		m_Renderer = nullptr;
 
 		delete m_Player;
-		m_Player = NULL;
+		m_Player = nullptr;
 	}
 	catch (const std::exception & e)
 	{
