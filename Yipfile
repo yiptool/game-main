@@ -54,6 +54,21 @@ sources:osx
 	osx/util.mm
 }
 
+sources:ios
+{
+	ios/app_delegate.h
+	ios/app_delegate.mm
+	ios/gl_view.h
+	ios/gl_view.mm
+	ios/gl_view_controller.h
+	ios/gl_view_controller.m
+	ios/main.m
+	ios/root_view.h
+	ios/root_view.m
+	ios/splash_view_controller.h
+	ios/splash_view_controller.m
+}
+
 sources:tizen
 {
 	tizen/application.cpp
