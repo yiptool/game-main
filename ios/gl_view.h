@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 //
 #import <UIKit/UIKit.h>
+#import "../opengl_init_options.h"
 
 @class GLViewController;
 
@@ -29,8 +30,10 @@
 	float scaleFactor;
 	GLuint framebuffer;
 	GLuint renderbuffer;
+	GLuint depthStencilRenderbuffer;
 	CGSize renderbufferSize;
 	BOOL firstFrame;
+	OpenGLInitOptions initOptions;
 }
 @property (nonatomic, assign) GLViewController * controller;
 @property (nonatomic, assign) CAEAGLLayer * eaglLayer;

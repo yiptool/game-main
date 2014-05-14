@@ -61,7 +61,7 @@ sources:ios
 	ios/gl_view.h
 	ios/gl_view.mm
 	ios/gl_view_controller.h
-	ios/gl_view_controller.m
+	ios/gl_view_controller.mm
 	ios/main.m
 	ios/root_view.h
 	ios/root_view.m

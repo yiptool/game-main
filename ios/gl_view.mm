@@ -56,8 +56,7 @@
 	}
 
 	// Query OpenGL settings
-	OpenGLInitOptions opt;
-	GameInstance::instance()->configureOpenGL(opt);
+	GameInstance::instance()->configureOpenGL(initOptions);
 
 	self.eaglLayer = (CAEAGLLayer *)self.layer;
 	eaglLayer.opaque = YES;
@@ -131,6 +130,18 @@
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
+	if (initOptions.depthBits > 0 || initOptions.stencilBits > 0)
+	{
+		glGenRenderbuffers(1, &depthStencilRenderbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, depthStencilRenderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, int(size.width), int(size.height));
+		if (initOptions.depthBits > 0)
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthStencilRenderbuffer);
+		if (initOptions.stencilBits > 0)
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilRenderbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+
 	renderbufferSize = size;
 }
 
@@ -148,6 +159,13 @@
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glDeleteRenderbuffers(1, &renderbuffer);
 		renderbuffer = 0;
+	}
+
+	if (depthStencilRenderbuffer)
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glDeleteRenderbuffers(1, &depthStencilRenderbuffer);
+		depthStencilRenderbuffer = 0;
 	}
 }
 
