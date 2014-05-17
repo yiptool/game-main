@@ -26,6 +26,9 @@
 #import "../game_instance.h"
 #import "../key_code.h"
 #import <algorithm>
+#import <yip-imports/cxx-util/macros.h>
+#import <mach/mach.h>
+#import <mach/mach_time.h>
 
 #define FULLSCREEN_STYLE_MASK (NSBorderlessWindowMask)
 #define WINDOWED_STYLE_MASK (NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask)
@@ -34,6 +37,7 @@
 
 @interface GLView : NSView
 {
+	uint64_t prevTime;
 	NSOpenGLContext * context;
 	BOOL initialized;
 }
@@ -108,18 +112,40 @@
 
 	[context makeCurrentContext];
 
+	// Update time counters
+
+	uint64_t curTime = mach_absolute_time();
+	uint64_t timeDelta;
+	if (LIKELY(initialized))
+		timeDelta = curTime - prevTime;
+	else
+		timeDelta = 0;
+	prevTime = curTime;
+
+	if (UNLIKELY(timeDelta > 1.0 / 24.0))
+		timeDelta = 1.0 / 24.0;
+
+	GameInstance::instance()->setLastFrameTime(timeDelta);
+	GameInstance::instance()->setTotalTime(GameInstance::instance()->totalTime() + timeDelta);
+
+	// Adjust for viewport size
+
 	NSRect bounds = [self convertRectToBacking:[self bounds]];
 	int width = (int)bounds.size.width;
 	int height = (int)bounds.size.height;
 	GameInstance::instance()->setViewportSize_(width, height);
 
-	if (!initialized)
+	// Run game frame
+
+	if (UNLIKELY(!initialized))
 	{
 		GameInstance::instance()->init();
 		initialized = YES;
 	}
 
 	GameInstance::instance()->runFrame_();
+
+	// Present framebuffer to the screen
 
 	[context flushBuffer];
 }

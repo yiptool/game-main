@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 //
 #import <QuartzCore/QuartzCore.h>
+#import <yip-imports/cxx-util/macros.h>
 #import "../game_instance.h"
 #import "gl_view.h"
 #import "gl_view_controller.h"
@@ -175,12 +176,30 @@
 	{
 		[EAGLContext setCurrentContext:eaglContext];
 
+		// Update time counters
+
+		CFTimeInterval curTime = displayLink.timestamp;
+		CFTimeInterval timeDelta;
+		if (LIKELY(!firstFrame))
+			timeDelta = curTime - prevTime;
+		else
+			timeDelta = 0;
+		prevTime = curTime;
+
+		if (UNLIKELY(timeDelta > 1.0 / 24.0))
+			timeDelta = 1.0 / 24.0;
+
+		GameInstance::instance()->setLastFrameTime(timeDelta);
+		GameInstance::instance()->setTotalTime(GameInstance::instance()->totalTime() + timeDelta);
+
+		// Adjust for viewport size
+
 		CGSize size = self.bounds.size;
 		size.width *= scaleFactor;
 		size.height *= scaleFactor;
 
-		if (!framebuffer || !renderbuffer ||
-			size.width != renderbufferSize.width || size.height != renderbufferSize.height)
+		if (UNLIKELY(!framebuffer || !renderbuffer ||
+			size.width != renderbufferSize.width || size.height != renderbufferSize.height))
 		{
 			[self destroyFramebuffer];
 			[self createFramebuffer:size];
@@ -188,15 +207,21 @@
 
 		GameInstance::instance()->setViewportSize_(int(size.width), int(size.height));
 
-		if (firstFrame)
+		// Run game frame
+
+		if (UNLIKELY(firstFrame))
 			GameInstance::instance()->init();
 
 		GameInstance::instance()->runFrame_();
 
+		// Present framebuffer to the screen
+
 		glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
 		[eaglContext presentRenderbuffer:GL_RENDERBUFFER];
 
-		if (firstFrame)
+		// Dismiss splash if it is still displayed
+
+		if (UNLIKELY(firstFrame))
 		{
 			[controller dismissSplash];
 			firstFrame = NO;

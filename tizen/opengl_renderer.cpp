@@ -68,6 +68,8 @@ bool TizenPort::OpenGLRenderer::Draw()
 {
 	try
 	{
+		GameInstance::instance()->setLastFrameTime(0.0);	// FIXME
+		GameInstance::instance()->setTotalTime(0.0);		// FIXME
 		GameInstance::instance()->setViewportSize_(m_ControlWidth, m_ControlHeight);
 		GameInstance::instance()->runFrame_();
 	}

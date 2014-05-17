@@ -114,6 +114,30 @@ public:
 	/** @endcond */
 
 	/**
+	 * Returns amount of time (in seconds) passed from the previous frame.
+	 * @return Time from the previous frame.
+	 */
+	inline double lastFrameTime() const { return m_LastFrameTime; }
+
+	/**
+	 * Sets amount of time (in seconds) passed from the previous frame.
+	 * @param time Time from the previous frame.
+	 */
+	inline void setLastFrameTime(double time) { m_LastFrameTime = time; }
+
+	/**
+	 * Returns current in-application time (in seconds).
+	 * @return Current in-application time.
+	 */
+	inline double totalTime() const { return m_TotalTime; }
+
+	/**
+	 * Sets current in-application time (in seconds).
+	 * @param time Current in-application time.
+	 */
+	inline void setTotalTime(double time) { m_TotalTime = time; }
+
+	/**
 	 * Allows game to modify OpenGL initialization options.
 	 * @param options Reference to OpenGL initialization options that could be modified by the game.
 	 * @warning This method is called before the init() method.
@@ -163,6 +187,8 @@ public:
 
 private:
 	mutable GL::ResourceManagerPtr m_ResourceManager;
+	double m_LastFrameTime;
+	double m_TotalTime;
 	bool m_ResourceManagerDestroyed;
 	int m_ViewportWidth;
 	int m_ViewportHeight;

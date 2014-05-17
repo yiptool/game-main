@@ -28,6 +28,8 @@ extern "C" void * c9737b5fd();
 
 GameInstance::GameInstance() noexcept
 	: m_ResourceManagerDestroyed(false),
+	  m_LastFrameTime(0.0),
+	  m_TotalTime(0.0),
 	  m_ViewportWidth(0),
 	  m_ViewportHeight(0)
 {

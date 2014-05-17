@@ -32,6 +32,7 @@
 	GLuint renderbuffer;
 	GLuint depthStencilRenderbuffer;
 	CGSize renderbufferSize;
+	CFTimeInterval prevTime;
 	BOOL firstFrame;
 	OpenGLInitOptions initOptions;
 }
