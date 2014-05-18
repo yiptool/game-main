@@ -37,6 +37,7 @@
 
 @interface GLView : NSView
 {
+	mach_timebase_info_data_t machTimeBase;
 	uint64_t prevTime;
 	NSOpenGLContext * context;
 	BOOL initialized;
@@ -119,14 +120,18 @@
 	if (LIKELY(initialized))
 		timeDelta = curTime - prevTime;
 	else
+	{
+		mach_timebase_info(&machTimeBase);
 		timeDelta = 0;
+	}
 	prevTime = curTime;
 
-	if (UNLIKELY(timeDelta > 1.0 / 24.0))
-		timeDelta = 1.0 / 24.0;
+	double timeDeltaInSeconds = double(timeDelta) * machTimeBase.numer / (1000000000.0 * machTimeBase.denom);
+	if (UNLIKELY(timeDeltaInSeconds > 1.0 / 24.0))
+		timeDeltaInSeconds = 1.0 / 24.0;
 
-	GameInstance::instance()->setLastFrameTime(timeDelta);
-	GameInstance::instance()->setTotalTime(GameInstance::instance()->totalTime() + timeDelta);
+	GameInstance::instance()->setLastFrameTime(timeDeltaInSeconds);
+	GameInstance::instance()->setTotalTime(GameInstance::instance()->totalTime() + timeDeltaInSeconds);
 
 	// Adjust for viewport size
 
