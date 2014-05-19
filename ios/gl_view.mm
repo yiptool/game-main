@@ -243,18 +243,6 @@
 
 -(void)handlePan:(UIGestureRecognizer *)recognizer
 {
-/*
-	PanState state;
-	switch (recognizer.state)
-	{
-	case UIGestureRecognizerStatePossible: return;
-	case UIGestureRecognizerStateFailed: return;
-	case UIGestureRecognizerStateBegan: state = PAN_DRAG_BEGIN; break;
-	case UIGestureRecognizerStateChanged: state = PAN_DRAG_CONTINUE; break;
-	case UIGestureRecognizerStateEnded: state = PAN_DRAG_END; break;
-	case UIGestureRecognizerStateCancelled: state = PAN_DRAG_CANCEL; break;
-	}
-
 	CGPoint location = [recognizer locationInView:recognizer.view];
 	CGPoint translation = [(UIPanGestureRecognizer *)recognizer translationInView:recognizer.view];
 	CGPoint velocity = [(UIPanGestureRecognizer *)recognizer velocityInView:recognizer.view];
@@ -266,8 +254,15 @@
 	float vx = (float)(velocity.x * scaleFactor);
 	float vy = (float)(velocity.y * scaleFactor);
 
-	GameInstance::instance()->onPan(state, x, y, dx, dy, vx, vy);
-*/
+	switch (recognizer.state)
+	{
+	case UIGestureRecognizerStatePossible: return;
+	case UIGestureRecognizerStateFailed: return;
+	case UIGestureRecognizerStateBegan: GameInstance::instance()->onMouseButtonDown(x, y, Sys::LeftButton); break;
+	case UIGestureRecognizerStateChanged: GameInstance::instance()->onMouseMove(x, y); break;
+	case UIGestureRecognizerStateEnded: GameInstance::instance()->onMouseButtonUp(x, y, Sys::LeftButton); break;
+	case UIGestureRecognizerStateCancelled: GameInstance::instance()->onMouseButtonUp(x, y, Sys::LeftButton); break;
+	}
 }
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)recognizer
