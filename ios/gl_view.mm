@@ -210,7 +210,7 @@
 		// Run game frame
 
 		if (UNLIKELY(firstFrame))
-			GameInstance::instance()->init();
+			GameInstance::instance()->init_();
 
 		GameInstance::instance()->runFrame_();
 

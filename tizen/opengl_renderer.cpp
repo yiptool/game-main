@@ -38,7 +38,7 @@ bool TizenPort::OpenGLRenderer::InitializeGl()
 {
 	try
 	{
-		GameInstance::instance()->init();
+		GameInstance::instance()->init_();
 	}
 	catch (const std::exception & e)
 	{

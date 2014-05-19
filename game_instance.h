@@ -91,6 +91,10 @@ public:
 	 */
 	virtual void init() = 0;
 
+	/** @cond */
+	void init_();
+	/** @endcond */
+
 	/**
 	 * Releases resources acquired by the game.
 	 * This method is called once by the framework to deinitialize the game.

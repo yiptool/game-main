@@ -144,7 +144,7 @@
 
 	if (UNLIKELY(!initialized))
 	{
-		GameInstance::instance()->init();
+		GameInstance::instance()->init_();
 		initialized = YES;
 	}
 

@@ -54,6 +54,12 @@ const GL::ResourceManagerPtr & GameInstance::resourceManager() const
 	return m_ResourceManager;
 }
 
+void GameInstance::init_()
+{
+	GL::init();
+	init();
+}
+
 void GameInstance::cleanup_()
 {
 	m_ResourceManagerDestroyed = true;
