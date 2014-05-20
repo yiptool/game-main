@@ -1,19 +1,23 @@
 #include "../opengl_init_options.h"
+#include "../game_instance.h"
 #include <jni.h>
 
 extern "C"
 {
 	JNIEXPORT void JNICALL Java_ru_zapolnov_MainActivity_nativeGetInitOptions
-		(JNIEnv * env, jobject obj, jobject opts)
+		(JNIEnv * env, jobject obj, jintArray opts)
 	{
 		OpenGLInitOptions options;
 		GameInstance::instance()->configureOpenGL(options);
-		env->SetIntArrayElement(opts, 0, options.redBits);
-		env->SetIntArrayElement(opts, 1, options.greenBits);
-		env->SetIntArrayElement(opts, 2, options.blueBits);
-		env->SetIntArrayElement(opts, 3, options.alphaBits);
-		env->SetIntArrayElement(opts, 4, options.depthBits);
-		env->SetIntArrayElement(opts, 5, options.stencilBits);
+
+		jint * arr = env->GetIntArrayElements(opts, 0);
+		arr[0] = options.redBits;
+		arr[1] = options.greenBits;
+		arr[2] = options.blueBits;
+		arr[3] = options.alphaBits;
+		arr[4] = options.depthBits;
+		arr[5] = options.stencilBits;
+		env->ReleaseIntArrayElements(opts, arr, 0);
 	}
 
 	JNIEXPORT void JNICALL Java_ru_zapolnov_MainActivity_nativeInit(JNIEnv * env, jobject obj)
