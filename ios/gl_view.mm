@@ -188,7 +188,9 @@
 			timeDelta = 0;
 		prevTime = curTime;
 
-		if (UNLIKELY(timeDelta > 1.0 / 24.0))
+		if (UNLIKELY(timeDelta < 0.0))
+			timeDelta = 0.0;
+		else if (UNLIKELY(timeDelta > 1.0 / 24.0))
 			timeDelta = 1.0 / 24.0;
 
 		GameInstance::instance()->setLastFrameTime(timeDelta);
