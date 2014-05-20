@@ -27,13 +27,14 @@ tizen:privilege "http://tizen.org/privilege/power"
 
 android:java_srcdir android/java
 android:min_sdk_version "8"
+android:make_activity MainActivity => ru.zapolnov.MainActivity
 android:activity `
 	<activity
-			android:name="ru.zapolnov.MainActivity"
+			android:name=".MainActivity"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 			android:launchMode="singleTask"
 			android:configChanges="orientation|keyboardHidden"
-			android:exported="false">
+			android:exported="true">
 		<intent-filter>
 			<action android:name="android.intent.action.MAIN" />
 			<category android:name="android.intent.category.LAUNCHER" />

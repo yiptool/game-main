@@ -9,11 +9,11 @@ import android.view.WindowManager;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public final class MainActivity extends Activity
+public class MainActivity extends Activity
 {
 	GLSurfaceView m_GLView;
 
-	@Override protected void onCreate(Bundle bundle)
+	@Override protected final void onCreate(Bundle bundle)
 	{
 		super.onCreate(bundle);
 
@@ -57,13 +57,13 @@ public final class MainActivity extends Activity
 		setContentView(m_GLView);
 	}
 
-	@Override protected void onPause()
+	@Override protected final void onPause()
 	{
 		super.onPause();
 		m_GLView.onPause();
 	}
 
-	@Override protected void onResume()
+	@Override protected final void onResume()
 	{
 		super.onResume();
 		m_GLView.onResume();
