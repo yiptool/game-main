@@ -49,21 +49,23 @@
 	renderbuffer = 0;
 	firstFrame = YES;
 
+	// Query OpenGL settings
+	GameInstance::instance()->configureOpenGL(initOptions);
+	bool use16bit = (initOptions.redBits <= 5 && initOptions.greenBits <= 6 && initOptions.blueBits <= 5
+		&& initOptions.alphaBits <= 0);
+
 	scaleFactor = 1.0f;
-	if ([self respondsToSelector:@selector(contentScaleFactor)])
+	if (initOptions.fullResolution && [self respondsToSelector:@selector(contentScaleFactor)])
 	{
 		scaleFactor = [[UIScreen mainScreen] scale];
 		self.contentScaleFactor = scaleFactor;
 	}
 
-	// Query OpenGL settings
-	GameInstance::instance()->configureOpenGL(initOptions);
-
 	self.eaglLayer = (CAEAGLLayer *)self.layer;
 	eaglLayer.opaque = YES;
 	eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking,
-		kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
+		(use16bit ? kEAGLColorFormatRGB565 : kEAGLColorFormatRGBA8), kEAGLDrawablePropertyColorFormat,
 		nil
 	];
 
