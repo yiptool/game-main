@@ -89,7 +89,7 @@ sources:ios
 android:java_srcdir android/java
 sources:android
 {
-	android/MainActivity.cpp
+	android/main_activity.cpp
 }
 
 sources:tizen
