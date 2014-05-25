@@ -41,7 +41,7 @@ public class MainActivity extends Activity
 	private GLSurfaceView m_GLView;
 	private GestureDetectorCompat m_GestureDetector;
 
-	@Override protected final void onCreate(Bundle bundle)
+	@Override protected void onCreate(Bundle bundle)
 	{
 		super.onCreate(bundle);
 
@@ -100,58 +100,59 @@ public class MainActivity extends Activity
 		m_GLView.onResume();
 	}
 
-	@Override public boolean onTouchEvent(MotionEvent event)
+	@Override public final boolean onTouchEvent(MotionEvent event)
 	{
 		m_GestureDetector.onTouchEvent(event);
 		return super.onTouchEvent(event);
 	}
 
-	@Override public boolean onDown(MotionEvent event)
+	@Override public final boolean onDown(MotionEvent event)
 	{
 		return true;
 	}
 
-	@Override public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY)
+	@Override public final boolean onFling(MotionEvent event1, MotionEvent event2,
+		float velocityX, float velocityY)
 	{
 		Log.d("Java", "onFling: " + event1.toString() + event2.toString());
 		return true;
 	}
 
-	@Override public void onLongPress(MotionEvent event)
+	@Override public final void onLongPress(MotionEvent event)
 	{
 		Log.d("Java", "onLongPress: " + event.toString());
 	}
 
-	@Override public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+	@Override public final boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 	{
 		Log.d("Java", "onScroll: " + e1.toString() + e2.toString());
 		return true;
 	}
 
-	@Override public void onShowPress(MotionEvent event)
+	@Override public final void onShowPress(MotionEvent event)
 	{
 		Log.d("Java", "onShowPress: " + event.toString());
 	}
 
-	@Override public boolean onSingleTapUp(MotionEvent event)
+	@Override public final boolean onSingleTapUp(MotionEvent event)
 	{
 		Log.d("Java", "onSingleTapUp: " + event.toString());
 		return true;
 	}
 
-	@Override public boolean onDoubleTap(MotionEvent event)
+	@Override public final boolean onDoubleTap(MotionEvent event)
 	{
 		Log.d("Java", "onDoubleTap: " + event.toString());
 		return true;
 	}
 
-	@Override public boolean onDoubleTapEvent(MotionEvent event)
+	@Override public final boolean onDoubleTapEvent(MotionEvent event)
 	{
 		Log.d("Java", "onDoubleTapEvent: " + event.toString());
 		return true;
 	}
 
-	@Override public boolean onSingleTapConfirmed(MotionEvent event)
+	@Override public final boolean onSingleTapConfirmed(MotionEvent event)
 	{
 		Log.d("Java", "onSingleTapConfirmed: " + event.toString());
 		return true;
