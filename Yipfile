@@ -33,7 +33,7 @@ android:activity `
 			android:name=".MainActivity"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 			android:launchMode="singleTask"
-			android:configChanges="orientation|keyboardHidden"
+			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
 			android:exported="true">
 		<intent-filter>
 			<action android:name="android.intent.action.MAIN" />
