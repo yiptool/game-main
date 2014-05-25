@@ -160,8 +160,4 @@ public class MainActivity extends Activity
 	public static native void nativeGetInitOptions(int[] opts);
 	public static native void nativeInit();
 	public static native void nativeRunFrame(int width, int height, long time);
-
-	static {
-		System.loadLibrary("code");
-	}
 }
