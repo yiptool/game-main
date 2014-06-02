@@ -30,7 +30,7 @@ tizen:privilege "http://tizen.org/privilege/power"
 android:java_srcdir android/java
 android:min_sdk_version "8"
 android:make_activity MainActivity => ru.zapolnov.MainActivity
-android:activity `
+android:manifest_activity `
 	<activity
 			android:name=".MainActivity"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
