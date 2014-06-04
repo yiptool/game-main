@@ -50,6 +50,9 @@ osx:framework OpenGL
 
 public_headers
 {
+	ios/app_delegate.h
+	ios/gl_view.h
+	ios/gl_view_controller.h
 	game_instance.h
 	key_code.h
 	mouse_button.h
@@ -75,11 +78,8 @@ sources:osx
 
 sources:ios
 {
-	ios/app_delegate.h
 	ios/app_delegate.mm
-	ios/gl_view.h
 	ios/gl_view.mm
-	ios/gl_view_controller.h
 	ios/gl_view_controller.mm
 	ios/main.m
 	ios/root_view.h
