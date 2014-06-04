@@ -21,23 +21,17 @@
 // THE SOFTWARE.
 //
 #import <UIKit/UIKit.h>
+#import <yip-imports/ios/NZOpenGLView.h>
 #import "../opengl_init_options.h"
 
 @class GLViewController;
 
-@interface GLView : UIView <UIGestureRecognizerDelegate>
+@interface GLView : NZOpenGLView
 {
-	float scaleFactor;
-	GLuint framebuffer;
-	GLuint renderbuffer;
-	GLuint depthStencilRenderbuffer;
-	CGSize renderbufferSize;
-	CFTimeInterval prevTime;
-	BOOL firstFrame;
+	BOOL hasInitOptions;
 	OpenGLInitOptions initOptions;
 }
-@property (nonatomic, assign) GLViewController * controller;
-@property (nonatomic, assign) CAEAGLLayer * eaglLayer;
-@property (nonatomic, retain) EAGLContext * eaglContext;
+@property (nonatomic, assign, readonly) GLViewController * controller;
 -(id)initWithController:(GLViewController *)cntrl;
+-(const OpenGLInitOptions &)initOptions;
 @end

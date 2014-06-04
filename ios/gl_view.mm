@@ -29,208 +29,71 @@
 @implementation GLView
 
 @synthesize controller;
-@synthesize eaglLayer;
-@synthesize eaglContext;
-
-+(Class)layerClass
-{
-	return [CAEAGLLayer class];
-}
 
 -(id)initWithController:(GLViewController *)cntrl
 {
-	CGRect screenSize = [UIScreen mainScreen].applicationFrame;
-	self = [super initWithFrame:screenSize];
-	if (!self)
-		return nil;
-
-	self.controller = cntrl;
-	framebuffer = 0;
-	renderbuffer = 0;
-	firstFrame = YES;
-
-	// Query OpenGL settings
-	GameInstance::instance()->configureOpenGL(initOptions);
-	bool use16bit = (initOptions.redBits <= 5 && initOptions.greenBits <= 6 && initOptions.blueBits <= 5
-		&& initOptions.alphaBits <= 0);
-
-	scaleFactor = 1.0f;
-	if (initOptions.fullResolution && [self respondsToSelector:@selector(contentScaleFactor)])
-	{
-		scaleFactor = [[UIScreen mainScreen] scale];
-		self.contentScaleFactor = scaleFactor;
-	}
-
-	self.eaglLayer = (CAEAGLLayer *)self.layer;
-	eaglLayer.opaque = YES;
-	eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking,
-		(use16bit ? kEAGLColorFormatRGB565 : kEAGLColorFormatRGBA8), kEAGLDrawablePropertyColorFormat,
-		nil
-	];
-
-	self.eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-	if (!eaglContext)
-	{
-		[self release];
-		return nil;
-	}
-
-	if (![EAGLContext setCurrentContext:eaglContext])
-	{
-		[self release];
-		return nil;
-	}
-
-	CADisplayLink * displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(render:)];
-	[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-
-	UITapGestureRecognizer * tapGestureRecognizer = [[[UITapGestureRecognizer alloc]
-		initWithTarget:self action:@selector(handleTap:)] autorelease];
-	[tapGestureRecognizer setNumberOfTapsRequired:1];
-	[tapGestureRecognizer setNumberOfTouchesRequired:1];
-	[self addGestureRecognizer:tapGestureRecognizer];
-
-	UIPanGestureRecognizer * panGestureRecognizer = [[[UIPanGestureRecognizer alloc]
-		initWithTarget:self action:@selector(handlePan:)] autorelease];
-	[self addGestureRecognizer:panGestureRecognizer];
-
-	UIPinchGestureRecognizer * pinchGestureRecognizer = [[[UIPinchGestureRecognizer alloc]
-		initWithTarget:self action:@selector(handlePinch:)] autorelease];
-	[self addGestureRecognizer:pinchGestureRecognizer];
-
-	UILongPressGestureRecognizer * longPressGestureRecognizer = [[[UILongPressGestureRecognizer alloc]
-		initWithTarget:self action:@selector(handleLongPress:)] autorelease];
-	[self addGestureRecognizer:longPressGestureRecognizer];
-
-	[self setUserInteractionEnabled:YES];
-
+	self = [super initWithTargetScreen:[UIScreen mainScreen]];
+	if (self)
+		controller = cntrl;
 	return self;
 }
 
--(void)dealloc
+-(const OpenGLInitOptions &)initOptions
 {
-	if (!firstFrame)
-	{
-		if ([EAGLContext setCurrentContext:eaglContext])
-			GameInstance::instance()->cleanup_();
-		[EAGLContext setCurrentContext:nil];
-	}
-	self.eaglContext = nil;
-	[super dealloc];
+	if (UNLIKELY(!hasInitOptions))
+		GameInstance::instance()->configureOpenGL(initOptions);
+	return initOptions;
 }
 
--(void)createFramebuffer:(CGSize)size
+-(BOOL)fullResolution
 {
-	NSLog(@"Creating framebuffer with size %dx%d.", int(size.width), int(size.height));
-
-	glGenFramebuffers(1, &framebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-	glGenRenderbuffers(1, &renderbuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
-	[eaglContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:eaglLayer];
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	if (initOptions.depthBits > 0 || initOptions.stencilBits > 0)
-	{
-		glGenRenderbuffers(1, &depthStencilRenderbuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, depthStencilRenderbuffer);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, int(size.width), int(size.height));
-		if (initOptions.depthBits > 0)
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthStencilRenderbuffer);
-		if (initOptions.stencilBits > 0)
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilRenderbuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	}
-
-	renderbufferSize = size;
+	return self.initOptions.fullResolution;
 }
 
--(void)destroyFramebuffer
+-(NSString *)eaglColorFormat
 {
-	if (framebuffer)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glDeleteFramebuffers(1, &framebuffer);
-		framebuffer = 0;
-	}
-
-	if (renderbuffer)
-	{
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		glDeleteRenderbuffers(1, &renderbuffer);
-		renderbuffer = 0;
-	}
-
-	if (depthStencilRenderbuffer)
-	{
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		glDeleteRenderbuffers(1, &depthStencilRenderbuffer);
-		depthStencilRenderbuffer = 0;
-	}
+	const OpenGLInitOptions & opt = self.initOptions;
+	if (opt.redBits <= 5 && opt.greenBits <= 6 && opt.blueBits <= 5 && opt.alphaBits <= 0)
+		return kEAGLColorFormatRGB565;
+	return kEAGLColorFormatRGBA8;
 }
 
--(void)render:(CADisplayLink *)displayLink
+-(int)depthBits
 {
-	@autoreleasepool
-	{
-		[EAGLContext setCurrentContext:eaglContext];
+	return self.initOptions.depthBits;
+}
 
-		// Update time counters
+-(int)stencilBits
+{
+	return self.initOptions.stencilBits;
+}
 
-		CFTimeInterval curTime = displayLink.timestamp;
-		CFTimeInterval timeDelta;
-		if (LIKELY(!firstFrame))
-			timeDelta = curTime - prevTime;
-		else
-			timeDelta = 0;
-		prevTime = curTime;
+-(void)initGL
+{
+	GameInstance::instance()->init_();
+}
 
-		if (UNLIKELY(timeDelta < 0.0))
-			timeDelta = 0.0;
-		else if (UNLIKELY(timeDelta > 1.0 / 24.0))
-			timeDelta = 1.0 / 24.0;
+-(void)cleanupGL
+{
+	GameInstance::instance()->cleanup_();
+}
 
-		GameInstance::instance()->setLastFrameTime(timeDelta);
-		GameInstance::instance()->setTotalTime(GameInstance::instance()->totalTime() + timeDelta);
+-(void)resizeGL:(CGSize)size
+{
+	GameInstance::instance()->setViewportSize_(int(size.width), int(size.height));
+}
 
-		// Adjust for viewport size
+-(void)renderWidth:(CGFloat)width height:(CGFloat)height time:(CFTimeInterval)timeDelta
+{
+	GameInstance::instance()->setLastFrameTime(timeDelta);
+	GameInstance::instance()->setTotalTime(GameInstance::instance()->totalTime() + timeDelta);
+	GameInstance::instance()->runFrame_();
+}
 
-		CGSize size = self.bounds.size;
-		size.width *= scaleFactor;
-		size.height *= scaleFactor;
-
-		if (UNLIKELY(!framebuffer || !renderbuffer ||
-			size.width != renderbufferSize.width || size.height != renderbufferSize.height))
-		{
-			[self destroyFramebuffer];
-			[self createFramebuffer:size];
-		}
-
-		GameInstance::instance()->setViewportSize_(int(size.width), int(size.height));
-
-		// Run game frame
-
-		if (UNLIKELY(firstFrame))
-			GameInstance::instance()->init_();
-
-		GameInstance::instance()->runFrame_();
-
-		// Present framebuffer to the screen
-
-		glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
-		[eaglContext presentRenderbuffer:GL_RENDERBUFFER];
-
-		// Dismiss splash if it is still displayed
-
-		if (UNLIKELY(firstFrame))
-		{
-			[controller dismissSplash];
-			firstFrame = NO;
-		}
-	}
+-(void)didRenderFirstFrame
+{
+	// Dismiss splash if it is still displayed
+	[controller dismissSplash];
 }
 
 -(void)handleTap:(UIGestureRecognizer *)recognizer
