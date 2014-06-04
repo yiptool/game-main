@@ -47,7 +47,6 @@ android:manifest_activity `
 
 osx:framework Cocoa
 osx:framework QuartzCore
-osx:framework OpenGL
 
 public_headers
 {
