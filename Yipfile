@@ -22,6 +22,7 @@ THE SOFTWARE."
 
 import gles2-util
 import cxx-util
+import ios-util
 import android-jni-util
 import jni-util
 
@@ -84,8 +85,6 @@ sources:ios
 	ios/main.m
 	ios/root_view.h
 	ios/root_view.mm
-	ios/splash_view_controller.h
-	ios/splash_view_controller.m
 }
 
 android:java_srcdir android/java

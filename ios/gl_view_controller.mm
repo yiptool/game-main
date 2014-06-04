@@ -21,9 +21,9 @@
 // THE SOFTWARE.
 //
 #import "gl_view_controller.h"
-#import "splash_view_controller.h"
 #import "gl_view.h"
 #import "root_view.h"
+#import <yip-imports/ios/NZSplashViewController.h>
 
 @implementation GLViewController
 
@@ -40,7 +40,7 @@
 
 -(void)presentSplash
 {
-	SplashViewController * splashController = [[[SplashViewController alloc] init] autorelease];
+	NZSplashViewController * splashController = [[[NZSplashViewController alloc] init] autorelease];
 	splashController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	[self presentViewController:splashController animated:NO completion:nil];
 }
