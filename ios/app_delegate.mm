@@ -25,6 +25,8 @@
 
 @implementation AppDelegate
 
+@synthesize window;
+
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	GLViewController * viewController = [[[GLViewController alloc] init] autorelease];
