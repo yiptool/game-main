@@ -22,20 +22,35 @@
 //
 #import "gl_view_controller.h"
 #import "gl_view.h"
-#import "root_view.h"
 #import <yip-imports/ios/NZSplashViewController.h>
 
 @implementation GLViewController
 
 @synthesize glView;
 
--(void)loadView
+-(id)init
 {
-	self.view = [[[RootView alloc] initWithController:self] autorelease];
+	return [super initWithNibName:nil bundle:nil];
+}
+
+-(void)dealloc
+{
+	[glView release];
+	glView = nil;
+}
+
+-(void)viewDidLoad
+{
+	self.view.userInteractionEnabled = YES;
 	self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
 	self.glView = [[[GLView alloc] initWithController:self] autorelease];
 	[self.view addSubview:glView];
+}
+
+-(void)viewWillLayoutSubviews
+{
+	glView.frame = self.view.bounds;
 }
 
 -(void)presentSplash

@@ -26,6 +26,8 @@
 
 @interface GLViewController : UIViewController
 @property (nonatomic, retain) GLView * glView;
+-(id)init;
+-(void)dealloc;
 -(void)presentSplash;
 -(void)dismissSplash;
 @end
