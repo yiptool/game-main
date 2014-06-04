@@ -72,12 +72,7 @@
 		for (NSString * file in images)
 		{
 			UIImage * image = [UIImage imageNamed:file];
-			if (!image)
-			{
-				NSLog(@"Image '%@' was not found in the bundle.", file);
-				continue;
-			}
-			else
+			if (image)
 			{
 				CGSize imageSize = image.size;
 				int imageWidth = (int)imageSize.width;
