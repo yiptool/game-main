@@ -28,14 +28,23 @@
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	GLViewController * viewController = [[[GLViewController alloc] init] autorelease];
+	CGRect screenSize = [UIScreen mainScreen].bounds;
 
-	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window = [[[UIWindow alloc] initWithFrame:screenSize] autorelease];
 	[self.window setRootViewController:viewController];
 	[self.window makeKeyAndVisible];
 
 	[viewController presentSplash];
 
 	return YES;
+}
+
+-(void)dealloc
+{
+	[window release];
+	window = nil;
+
+	[super dealloc];
 }
 
 -(void)applicationWillResignActive:(UIApplication *)application
