@@ -32,9 +32,9 @@
 	GLViewController * viewController = [[[GLViewController alloc] init] autorelease];
 	CGRect screenSize = [UIScreen mainScreen].bounds;
 
-	self.window = [[[UIWindow alloc] initWithFrame:screenSize] autorelease];
-	[self.window setRootViewController:viewController];
-	[self.window makeKeyAndVisible];
+	window = [[UIWindow alloc] initWithFrame:screenSize];
+	[window setRootViewController:viewController];
+	[window makeKeyAndVisible];
 
 	[viewController presentSplash];
 
