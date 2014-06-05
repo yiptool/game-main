@@ -25,16 +25,16 @@
 
 @implementation AppDelegate
 
-@synthesize window;
+@synthesize mainWindow;
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	GLViewController * viewController = [[[GLViewController alloc] init] autorelease];
 	CGRect screenSize = [UIScreen mainScreen].bounds;
 
-	window = [[UIWindow alloc] initWithFrame:screenSize];
-	[window setRootViewController:viewController];
-	[window makeKeyAndVisible];
+	mainWindow = [[UIWindow alloc] initWithFrame:screenSize];
+	[mainWindow setRootViewController:viewController];
+	[mainWindow makeKeyAndVisible];
 
 	[viewController presentSplash];
 
@@ -43,8 +43,8 @@
 
 -(void)dealloc
 {
-	[window release];
-	window = nil;
+	[mainWindow release];
+	mainWindow = nil;
 
 	[super dealloc];
 }

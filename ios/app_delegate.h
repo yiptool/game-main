@@ -23,5 +23,5 @@
 #import <UIKit/UIKit.h>
 
 @interface AppDelegate : UIResponder<UIApplicationDelegate>
-@property (nonatomic, retain, readonly) UIWindow * window;
+@property (nonatomic, retain, readonly) UIWindow * mainWindow;
 @end

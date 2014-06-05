@@ -21,10 +21,11 @@
 // THE SOFTWARE.
 //
 #import <UIKit/UIKit.h>
+#import <yip-imports/ios/NZAirPlayViewController.h>
 
 @class GLView;
 
-@interface GLViewController : UIViewController
+@interface GLViewController : NZAirPlayViewController
 @property (nonatomic, retain) GLView * glView;
 -(id)init;
 -(void)dealloc;

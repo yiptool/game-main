@@ -23,6 +23,7 @@ THE SOFTWARE."
 import gles2-util
 import cxx-util
 import ios-opengl-view
+import ios-airplay-util
 import ios-util
 import android-jni-util
 import jni-util

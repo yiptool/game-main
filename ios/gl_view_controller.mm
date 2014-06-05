@@ -37,6 +37,7 @@
 {
 	[glView release];
 	glView = nil;
+	[super dealloc];
 }
 
 -(void)viewDidLoad
@@ -45,12 +46,9 @@
 	self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
 	self.glView = [[[GLView alloc] initWithController:self] autorelease];
-	[self.view addSubview:glView];
-}
+	self.primaryView = glView;
 
--(void)viewWillLayoutSubviews
-{
-	glView.frame = self.view.bounds;
+	[super viewDidLoad];
 }
 
 -(void)presentSplash
@@ -86,6 +84,11 @@
 			mask |= UIInterfaceOrientationMaskLandscapeRight;
 	}
 	return mask;
+}
+
+-(BOOL)prefersStatusBarHidden
+{
+	return YES;
 }
 
 -(void)viewWillAppear:(BOOL)animated
