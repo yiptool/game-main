@@ -98,14 +98,12 @@
 
 -(void)handleTap:(UIGestureRecognizer *)recognizer
 {
-/*
 	CGPoint location = [recognizer locationInView:recognizer.view];
-
 	int x = (int)(location.x * scaleFactor);
 	int y = (int)(location.y * scaleFactor);
-
-	GameInstance::instance()->onTap(x, y);
-*/
+	GameInstance::instance()->onMouseMove(x, y);
+	GameInstance::instance()->onMouseButtonDown(x, y, Sys::LeftButton);
+	GameInstance::instance()->onMouseButtonUp(x, y, Sys::LeftButton);
 }
 
 -(void)handlePan:(UIGestureRecognizer *)recognizer
