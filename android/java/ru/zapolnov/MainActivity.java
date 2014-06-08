@@ -30,6 +30,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -84,8 +85,20 @@ public class MainActivity extends Activity
 
 		setContentView(m_GLView);
 
-		m_GestureDetector = new GestureDetectorCompat(this, this);
-		m_GestureDetector.setOnDoubleTapListener(this);
+//		m_GestureDetector = new GestureDetectorCompat(this, this);
+//		m_GestureDetector.setOnDoubleTapListener(this);
+
+		m_GLView.setOnTouchListener(new View.OnTouchListener() {
+			@Override public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN)
+					nativeTouchBegin(event.getX(), event.getY());
+				else if (event.getAction() == MotionEvent.ACTION_MOVE)
+					nativeTouchContinue(event.getX(), event.getY());
+				else if (event.getAction() == MotionEvent.ACTION_UP)
+					nativeTouchEnd(event.getX(), event.getY());
+				return true;
+			}
+		});
 	}
 
 	@Override protected final void onPause()
@@ -102,7 +115,7 @@ public class MainActivity extends Activity
 
 	@Override public final boolean onTouchEvent(MotionEvent event)
 	{
-		m_GestureDetector.onTouchEvent(event);
+		// m_GestureDetector.onTouchEvent(event);
 		return super.onTouchEvent(event);
 	}
 
@@ -161,4 +174,7 @@ public class MainActivity extends Activity
 	public static native void nativeGetInitOptions(int[] opts);
 	public static native void nativeInit();
 	public static native void nativeRunFrame(int width, int height, long time);
+	public static native void nativeTouchBegin(float x, float y);
+	public static native void nativeTouchContinue(float x, float y);
+	public static native void nativeTouchEnd(float x, float y);
 }

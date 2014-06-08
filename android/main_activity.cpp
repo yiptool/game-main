@@ -71,4 +71,32 @@ extern "C"
 			GameInstance::instance()->runFrame_();
 		});
 	}
+
+	JNIEXPORT void JNICALL Java_ru_zapolnov_MainActivity_nativeTouchBegin(JNIEnv * env, jobject obj,
+		jfloat x, jfloat y) noexcept
+	{
+		jniTryCatch(env, [x, y]()
+		{
+			GameInstance::instance()->onMouseMove(x, y);
+			GameInstance::instance()->onMouseButtonDown(x, y, Sys::LeftButton);
+		});
+	}
+
+	JNIEXPORT void JNICALL Java_ru_zapolnov_MainActivity_nativeTouchContinue(JNIEnv * env, jobject obj,
+		jfloat x, jfloat y) noexcept
+	{
+		jniTryCatch(env, [x, y]()
+		{
+			GameInstance::instance()->onMouseMove(x, y);
+		});
+	}
+
+	JNIEXPORT void JNICALL Java_ru_zapolnov_MainActivity_nativeTouchEnd(JNIEnv * env, jobject obj,
+		jfloat x, jfloat y) noexcept
+	{
+		jniTryCatch(env, [x, y]()
+		{
+			GameInstance::instance()->onMouseButtonUp(x, y, Sys::LeftButton);
+		});
+	}
 }
