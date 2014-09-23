@@ -25,7 +25,6 @@ import cxx-util
 import ios-opengl-view
 import ios-airplay-util
 import ios-util
-import android-jni-util
 import jni-util
 
 tizen:privilege "http://tizen.org/privilege/power"
